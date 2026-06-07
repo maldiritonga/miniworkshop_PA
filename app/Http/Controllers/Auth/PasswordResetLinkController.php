@@ -3,19 +3,26 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetCodeMail;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Throwable;
 
 class PasswordResetLinkController extends Controller
 {
+    private const EXPIRES_MINUTES = 10;
+
     /**
      * Display the password reset link request view.
      */
     public function create(): View
     {
-        return view('auth.forgot-password');
+        return view('auth.reset-password.forgot-password');
     }
 
     /**
@@ -29,16 +36,32 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        $request->session()->forget(['password_reset_email', 'password_reset_verified_at']);
 
-        return $status == Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        $userExists = User::where('email', $request->email)->exists();
+
+        if ($userExists) {
+            $code = (string) random_int(100000, 999999);
+
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $request->email],
+                ['token' => Hash::make($code), 'created_at' => now()]
+            );
+
+            try {
+                Mail::to($request->email)->send(new PasswordResetCodeMail($code, self::EXPIRES_MINUTES));
+            } catch (Throwable $e) {
+                DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+                report($e);
+
+                return back()->withErrors([
+                    'email' => 'Gagal mengirim email. Pastikan konfigurasi email (SMTP) sudah benar, lalu coba lagi.',
+                ])->withInput($request->only('email'));
+            }
+        }
+
+        return redirect()
+            ->route('password.code.verify', ['email' => $request->email])
+            ->with('status', 'Jika email terdaftar, Anda akan menerima kode reset password.');
     }
 }

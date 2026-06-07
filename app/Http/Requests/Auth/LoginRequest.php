@@ -49,6 +49,16 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Cek apakah akun diblokir
+        if (Auth::user()->is_blocked) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'Akun Anda telah diblokir. Silakan hubungi admin untuk informasi lebih lanjut.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\PasswordResetCodeController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -27,6 +28,18 @@ Route::middleware('guest')->group(function () {
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
         ->name('password.email');
+
+    Route::get('verify-reset-code', [PasswordResetCodeController::class, 'create'])
+        ->name('password.code.verify');
+
+    Route::post('verify-reset-code', [PasswordResetCodeController::class, 'store'])
+        ->name('password.code.check');
+
+    Route::get('reset-password-code', [PasswordResetCodeController::class, 'showReset'])
+        ->name('password.code.reset');
+
+    Route::post('reset-password-code', [PasswordResetCodeController::class, 'reset'])
+        ->name('password.code.update');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');

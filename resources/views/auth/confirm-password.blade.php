@@ -1,27 +1,26 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+<x-auth-layout>
+    <x-slot name="title">Konfirmasi Password</x-slot>
+
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Konfirmasi Password</h1>
+        <p class="text-gray-500 font-medium">Untuk keamanan, silakan masukkan password Anda untuk melanjutkan.</p>
     </div>
 
-    <form method="POST" action="{{ route('password.confirm') }}">
+    <form method="POST" action="{{ route('password.confirm') }}" class="space-y-6">
         @csrf
 
-        <!-- Password -->
         <div>
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
+            <label for="password" class="block text-sm font-bold text-gray-800 mb-2">Password</label>
+            <input id="password" type="password" name="password" required autocomplete="current-password"
+                placeholder="Masukkan password Anda"
+                class="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
+        <div class="pt-2">
+            <button type="submit" class="w-full py-4 bg-[#FF5722] hover:bg-[#E64A19] text-white font-extrabold rounded-2xl shadow-lg shadow-orange-200 transition-all active:scale-[0.98]">
+                Konfirmasi
+            </button>
         </div>
     </form>
-</x-guest-layout>
+</x-auth-layout>
