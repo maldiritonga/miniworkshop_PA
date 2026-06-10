@@ -58,6 +58,15 @@
                         <p class="text-[12px] text-gray-600 leading-relaxed">{{ $pesanan->alamat_pengiriman }}</p>
                     </div>
                 </div>
+
+                @if($pesanan->catatan)
+                <div class="mt-8 pt-8 border-t border-gray-100">
+                    <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-4">Pesan Untuk Penjual</h3>
+                    <div class="rounded-2xl bg-yellow-50 border border-yellow-100 p-5">
+                        <p class="text-[12px] text-gray-700 leading-relaxed whitespace-pre-line">{{ $pesanan->catatan }}</p>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 

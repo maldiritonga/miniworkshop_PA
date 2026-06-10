@@ -120,6 +120,7 @@ class CheckoutController extends Controller
             'alamat_pengiriman' => 'required|string',
             'metode_pembayaran' => 'required|string',
             'bank_tujuan' => 'nullable|string|in:BRI,BNI,BCA',
+            'catatan' => 'nullable|string|max:500',
             'ongkir' => 'required|numeric',
             'kurir' => 'required|string|in:jne,sicepat,jnt',
         ]);
@@ -182,6 +183,7 @@ class CheckoutController extends Controller
                 'batas_pembayaran_at' => now()->addHours(Pesanan::BATAS_PEMBAYARAN_JAM),
                 'tipe_pesanan' => 'online',
                 'alamat_pengiriman' => $request->alamat_pengiriman,
+                'catatan' => $request->catatan,
                 'kurir' => $request->kurir,
             ]);
 

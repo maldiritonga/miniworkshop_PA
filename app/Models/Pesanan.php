@@ -23,6 +23,7 @@ class Pesanan extends Model
         'batas_pembayaran_at',
         'tipe_pesanan',
         'alamat_pengiriman',
+        'catatan',
         'kurir',
         'resi',
         'biteship_order_id',
