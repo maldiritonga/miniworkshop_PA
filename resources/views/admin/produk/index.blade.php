@@ -56,8 +56,8 @@
                             <td class="px-8 py-6">
                                 <div class="flex items-center gap-4">
                                     <div class="h-12 w-12 rounded-xl bg-gray-100 overflow-hidden shrink-0">
-                                        @if($item->gambar)
-                                            <img src="{{ asset('images/products/'.$item->gambar) }}" class="h-full w-full object-cover">
+                                        @if($item->gambar_url)
+                                            <img src="{{ $item->gambar_url }}" class="h-full w-full object-cover">
                                         @else
                                             <div class="h-full w-full flex items-center justify-center text-gray-300">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

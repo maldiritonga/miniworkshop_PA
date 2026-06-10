@@ -116,8 +116,8 @@
                     @endif
                     
                     <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden shrink-0">
-                        @if($item->produk->gambar)
-                            <img src="{{ asset('images/products/' . $item->produk->gambar) }}" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
+                        @if($item->produk->gambar_url)
+                            <img src="{{ $item->produk->gambar_url }}" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
                         @else
                             <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=400&q=80" alt="Default Product" class="w-full h-full object-cover">
                         @endif

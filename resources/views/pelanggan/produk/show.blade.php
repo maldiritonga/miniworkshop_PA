@@ -74,8 +74,8 @@
             
             <!-- Left: Image Section -->
             <div class="w-full aspect-[1/1.1] rounded-[2.5rem] overflow-hidden bg-white shadow-sm border border-gray-50">
-                @if($produk->gambar)
-                    <img src="{{ asset('images/products/' . $produk->gambar) }}" alt="{{ $produk->nama_produk }}" class="w-full h-full object-cover">
+                @if($produk->gambar_url)
+                    <img src="{{ $produk->gambar_url }}" alt="{{ $produk->nama_produk }}" class="w-full h-full object-cover">
                 @else
                     <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=800&q=80" alt="Default Product" class="w-full h-full object-cover">
                 @endif

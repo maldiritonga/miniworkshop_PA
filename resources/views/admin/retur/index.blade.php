@@ -44,8 +44,8 @@
                         <td class="px-8 py-5">
                             <div class="flex items-center gap-3">
                                 <div class="w-9 h-9 rounded-xl bg-gray-100 overflow-hidden shrink-0">
-                                    @if($item->produk->gambar)
-                                        <img src="{{ asset('images/products/'.$item->produk->gambar) }}" class="w-full h-full object-cover">
+                                    @if($item->produk->gambar_url)
+                                        <img src="{{ $item->produk->gambar_url }}" class="w-full h-full object-cover">
                                     @endif
                                 </div>
                                 <div class="text-[13px] font-bold text-gray-900">{{ $item->produk->nama_produk }}</div>

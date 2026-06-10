@@ -7,6 +7,7 @@ use App\Models\Produk;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProdukController extends Controller
 {
@@ -46,10 +47,7 @@ class ProdukController extends Controller
         $data['status_produk'] = $request->stok > 0 ? 'aktif' : 'nonaktif';
 
         if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/products'), $filename);
-            $data['gambar'] = $filename;
+            $data['gambar'] = $this->storeProductImage($request->file('gambar'));
         }
 
         Produk::create($data);
@@ -81,13 +79,8 @@ class ProdukController extends Controller
         $data['status_produk'] = $request->stok > 0 ? 'aktif' : 'nonaktif';
 
         if ($request->hasFile('gambar')) {
-            if ($produk->gambar && file_exists(public_path('images/products/' . $produk->gambar))) {
-                unlink(public_path('images/products/' . $produk->gambar));
-            }
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images/products'), $filename);
-            $data['gambar'] = $filename;
+            $this->deleteProductImage($produk->gambar);
+            $data['gambar'] = $this->storeProductImage($request->file('gambar'));
         }
 
         $produk->update($data);
@@ -97,10 +90,37 @@ class ProdukController extends Controller
 
     public function destroy(Produk $produk)
     {
-        if ($produk->gambar && file_exists(public_path('images/products/' . $produk->gambar))) {
-            unlink(public_path('images/products/' . $produk->gambar));
-        }
+        $this->deleteProductImage($produk->gambar);
         $produk->delete();
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    private function storeProductImage($file): string
+    {
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeName = Str::slug($originalName);
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename = time() . '_' . ($safeName ?: 'produk') . '.' . $extension;
+
+        Storage::disk('public')->putFileAs('produk', $file, $filename);
+
+        return $filename;
+    }
+
+    private function deleteProductImage(?string $filename): void
+    {
+        if (empty($filename)) {
+            return;
+        }
+
+        if (Storage::disk('public')->exists('produk/' . $filename)) {
+            Storage::disk('public')->delete('produk/' . $filename);
+        }
+
+        $legacyPath = public_path('images/products/' . $filename);
+
+        if (file_exists($legacyPath)) {
+            @unlink($legacyPath);
+        }
     }
 }

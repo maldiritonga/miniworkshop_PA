@@ -132,8 +132,8 @@
                             onclick="pilihProduk('{{ $item->id_produk }}', '{{ $item->harga }}', '{{ $item->stok }}')"
                             class="flex items-center gap-4 px-6 py-5 hover:bg-blue-50/50 transition text-left group w-full">
                             <div class="w-14 h-14 rounded-2xl bg-gray-100 overflow-hidden shrink-0">
-                                @if($item->gambar)
-                                    <img src="{{ asset('images/products/'.$item->gambar) }}" class="w-full h-full object-cover">
+                                @if($item->gambar_url)
+                                    <img src="{{ $item->gambar_url }}" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

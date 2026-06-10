@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Produk extends Model
 {
@@ -53,5 +54,26 @@ class Produk extends Model
     public function detailPesanan()
     {
         return $this->hasMany(DetailPesanan::class, 'id_produk', 'id_produk');
+    }
+
+    public function getGambarUrlAttribute(): ?string
+    {
+        if (empty($this->gambar)) {
+            return null;
+        }
+
+        if (filter_var($this->gambar, FILTER_VALIDATE_URL)) {
+            return $this->gambar;
+        }
+
+        if (Storage::disk('public')->exists('produk/' . $this->gambar)) {
+            return route('produk.image', ['filename' => $this->gambar]);
+        }
+
+        if (file_exists(public_path('images/products/' . $this->gambar))) {
+            return asset('images/products/' . $this->gambar);
+        }
+
+        return null;
     }
 }

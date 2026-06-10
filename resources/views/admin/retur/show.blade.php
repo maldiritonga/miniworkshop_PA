@@ -21,8 +21,8 @@
                 <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Produk yang Diretur</h3>
                 <div class="flex items-center gap-5">
                     <div class="w-20 h-20 rounded-2xl overflow-hidden bg-gray-100 shrink-0">
-                        @if($retur->produk->gambar)
-                            <img src="{{ asset('images/products/'.$retur->produk->gambar) }}" class="w-full h-full object-cover">
+                        @if($retur->produk->gambar_url)
+                            <img src="{{ $retur->produk->gambar_url }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full flex items-center justify-center text-gray-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

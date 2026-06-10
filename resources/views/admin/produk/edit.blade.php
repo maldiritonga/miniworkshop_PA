@@ -86,8 +86,8 @@
                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Gambar Produk</label>
                     <label class="relative block w-full py-16 bg-gray-50 rounded-[32px] border-2 border-dashed border-gray-200 overflow-hidden cursor-pointer group transition-all hover:bg-gray-100/50 text-center">
                         <input type="file" name="gambar" class="hidden" onchange="previewImage(this)">
-                        <img id="image-preview" src="{{ $produk->gambar ? asset('images/products/'.$produk->gambar) : '' }}" 
-                             class="absolute inset-0 w-full h-full object-cover {{ $produk->gambar ? '' : 'hidden' }}">
+                        <img id="image-preview" src="{{ $produk->gambar_url ?? '' }}" 
+                             class="absolute inset-0 w-full h-full object-cover {{ $produk->gambar_url ? '' : 'hidden' }}">
                         
                         <div id="image-placeholder" class="relative z-10 flex flex-col items-center justify-center">
                             <div class="bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-sm mb-3 group-hover:scale-110 transition-all">

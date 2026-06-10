@@ -371,8 +371,8 @@
                 <div class="grid grid-cols-12 px-6 py-5 items-center border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
                     <div class="col-span-6 flex gap-4 items-center">
                         <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
-                            @if($item->produk->gambar)
-                                <img src="{{ asset('images/products/' . $item->produk->gambar) }}" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
+                            @if($item->produk->gambar_url)
+                                <img src="{{ $item->produk->gambar_url }}" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
                             @else
                                 <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=100&q=80" alt="Default Product" class="w-full h-full object-cover">
                             @endif

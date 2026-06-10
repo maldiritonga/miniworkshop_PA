@@ -118,8 +118,8 @@
                         @foreach($order->detail as $detail)
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                                @if($detail->produk->gambar)
-                                    <img src="{{ asset('images/products/' . $detail->produk->gambar) }}" class="w-full h-full object-cover">
+                                @if($detail->produk->gambar_url)
+                                    <img src="{{ $detail->produk->gambar_url }}" class="w-full h-full object-cover">
                                 @else
                                     <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=100&q=80" class="w-full h-full object-cover">
                                 @endif

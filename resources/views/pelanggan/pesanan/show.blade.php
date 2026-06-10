@@ -192,8 +192,8 @@
                         <div id="retur-produk-{{ $item->id_produk }}" class="rounded-2xl {{ $returItem?->canPrintLabel() ? 'ring-2 ring-indigo-200 bg-indigo-50/40 p-4 -mx-1' : '' }}">
                             <div class="flex items-center gap-4">
                                 <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                                    @if($item->produk->gambar)
-                                        <img src="{{ asset('images/products/' . $item->produk->gambar) }}" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
+                                    @if($item->produk->gambar_url)
+                                        <img src="{{ $item->produk->gambar_url }}" alt="{{ $item->produk->nama_produk }}" class="w-full h-full object-cover">
                                     @endif
                                 </div>
                                 <div class="flex-1 min-w-0">

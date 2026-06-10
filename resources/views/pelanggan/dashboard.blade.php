@@ -100,9 +100,9 @@
                 @forelse($barangBaru as $item)
                 <div class="group cursor-pointer">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
-                        @if($item->gambar)
+                        @if($item->gambar_url)
                             <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
-                                <img src="{{ asset('images/products/' . $item->gambar) }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
+                                <img src="{{ $item->gambar_url }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
                             </a>
                         @else
                             <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
@@ -167,9 +167,9 @@
                 @forelse($katalogProduk as $item)
                 <div class="group cursor-pointer">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
-                        @if($item->gambar)
+                        @if($item->gambar_url)
                             <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
-                                <img src="{{ asset('images/products/' . $item->gambar) }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
+                                <img src="{{ $item->gambar_url }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
                             </a>
                         @else
                             <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
