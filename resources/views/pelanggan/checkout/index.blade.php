@@ -425,7 +425,7 @@
 
                 <div class="px-6 py-5 bg-gray-50 text-right flex items-center justify-end gap-4">
                     <span class="text-sm font-semibold text-gray-500">Total Pesanan ({{ count($items) }} Produk):</span>
-                    <span class="text-xl font-black text-gray-900" x-text="'Rp' + ({{ $total }} + shippingCost).toLocaleString('id-ID')">Rp{{ number_format($total + 15000, 0, ',', '.') }}</span>
+                    <span class="text-xl font-black text-gray-900" x-text="'Rp' + ({{ $subtotal }} + shippingCost).toLocaleString('id-ID')">Rp{{ number_format($subtotal, 0, ',', '.') }}</span>
                 </div>
             </div>
 
@@ -525,15 +525,15 @@
                         <div class="w-full md:w-[400px] bg-gray-50 p-6 rounded-2xl space-y-4">
                             <div class="flex justify-between text-sm font-semibold text-gray-500">
                                 <span>Subtotal Produk</span>
-                                <span class="text-gray-900">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                                <span class="text-gray-900" x-text="'Rp' + {{ $subtotal }}.toLocaleString('id-ID')">Rp{{ number_format($subtotal, 0, ',', '.') }}</span>
                             </div>
                             <div class="flex justify-between text-sm font-semibold text-gray-500 pb-4 border-b border-gray-200">
                                 <span>Total Ongkos Kirim</span>
-                                <span class="text-gray-900">Rp15.000</span>
+                                <span class="text-gray-900" x-text="'Rp' + shippingCost.toLocaleString('id-ID')">Rp0</span>
                             </div>
                             <div class="flex justify-between items-end pt-2">
                                 <span class="text-sm font-bold text-gray-900">Total Pembayaran</span>
-                                <span class="text-3xl font-black text-gray-900">Rp{{ number_format($total + 15000, 0, ',', '.') }}</span>
+                                <span class="text-3xl font-black text-gray-900" x-text="'Rp' + ({{ $subtotal }} + shippingCost).toLocaleString('id-ID')">Rp{{ number_format($subtotal, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>

@@ -18,7 +18,7 @@ class CheckoutController extends Controller
     {
         $user = Auth::user();
         $items = [];
-        $total = 0;
+        $subtotal = 0;
         $totalWeight = 0;
         $isDirect = false;
 
@@ -37,7 +37,7 @@ class CheckoutController extends Controller
                     'id_produk' => $produk->id_produk
                 ]
             ];
-            $total = $produk->harga + 15000;
+            $subtotal = $produk->harga;
             $totalWeight = 500; // 1 qty * 500g
             $isDirect = true;
         } elseif ($request->has('cart_item_ids')) {
@@ -58,9 +58,9 @@ class CheckoutController extends Controller
                  }
             }
 
-            $total = $items->sum(function($item) {
+            $subtotal = $items->sum(function($item) {
                 return $item->harga * $item->qty;
-            }) + 15000;
+            });
             
             $totalWeight = $items->sum(function($item) {
                 return $item->qty * 500;
@@ -83,9 +83,9 @@ class CheckoutController extends Controller
                  }
             }
             
-            $total = $items->sum(function($item) {
+            $subtotal = $items->sum(function($item) {
                 return $item->harga * $item->qty;
-            }) + 15000;
+            });
 
             $totalWeight = $items->sum(function($item) {
                 return $item->qty * 500;
@@ -110,7 +110,7 @@ class CheckoutController extends Controller
 
         $alamats = $user->alamats()->orderByDesc('is_utama')->orderBy('created_at')->get();
 
-        return view('pelanggan.checkout.index', compact('items', 'total', 'totalWeight', 'alamat', 'noHp', 'isDirect', 'lastOrder', 'alamats', 'alamatUtama'));
+        return view('pelanggan.checkout.index', compact('items', 'subtotal', 'totalWeight', 'alamat', 'noHp', 'isDirect', 'lastOrder', 'alamats', 'alamatUtama'));
     }
 
     public function process(Request $request)
