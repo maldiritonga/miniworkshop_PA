@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Workshop - Temukan Kemewahan Preloved</title>
+    <title>Mini Workshop - TES</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
@@ -84,7 +84,7 @@
                 <img src="{{ asset('images/fotoD.png') }}" alt="Hero Image" class="absolute inset-0 w-full h-full object-cover object-center" onerror="this.src='https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80'">
                 <div class="absolute inset-0 bg-black/20"></div>
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                    <h2 class="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">Temukan Kemewahan Preloved</h2>
+                    <h2 class="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-4 drop-shadow-lg tracking-tight">TES</h2>
                     <p class="text-base md:text-lg text-gray-100 mb-8 drop-shadow-md font-medium">Kualitas premium dengan harga terjangkau</p>
                     <a href="#catalog" class="px-10 py-4 bg-yellow-400 text-gray-900 font-bold rounded-xl hover:bg-yellow-500 transition shadow-lg text-sm md:text-base">
                         Jelajahi Koleksi
