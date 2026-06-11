@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/keranjang/remove/{id}', [CartController::class, 'remove'])->name('keranjang.remove');
 
     Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/save-address', [\App\Http\Controllers\CheckoutController::class, 'saveAddress'])->name('checkout.save-address');
     Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
     Route::post('/buy-now/{id}', [\App\Http\Controllers\CheckoutController::class, 'buyNow'])->name('buy-now');
     

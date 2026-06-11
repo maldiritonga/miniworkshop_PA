@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alamat;
 use App\Models\Keranjang;
 use App\Models\KeranjangDetail;
 use App\Models\Pesanan;
@@ -11,9 +12,47 @@ use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
+    protected function simpanAlamatCheckout($user, string $noHp, string $alamatPengiriman): Alamat
+    {
+        $alamatSudahAda = $user->alamats()
+            ->where('alamat_lengkap', $alamatPengiriman)
+            ->where('no_hp', $noHp)
+            ->first();
+
+        if (!$alamatSudahAda && $user->alamats()->count() >= 3) {
+            throw ValidationException::withMessages([
+                'alamat_pengiriman' => 'Maksimal 3 alamat yang dapat disimpan.',
+            ]);
+        }
+
+        $user->alamats()->update(['is_utama' => false]);
+
+        if ($alamatSudahAda) {
+            $alamatSudahAda->update([
+                'label' => $alamatSudahAda->label ?: 'Alamat Utama',
+                'nama_penerima' => $user->nama,
+                'no_hp' => $noHp,
+                'alamat_lengkap' => $alamatPengiriman,
+                'is_utama' => true,
+            ]);
+
+            return $alamatSudahAda->fresh();
+        }
+
+        return Alamat::create([
+            'id_user' => $user->id_user,
+            'label' => 'Alamat Utama',
+            'nama_penerima' => $user->nama,
+            'no_hp' => $noHp,
+            'alamat_lengkap' => $alamatPengiriman,
+            'is_utama' => true,
+        ]);
+    }
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -113,6 +152,28 @@ class CheckoutController extends Controller
         return view('pelanggan.checkout.index', compact('items', 'subtotal', 'totalWeight', 'alamat', 'noHp', 'isDirect', 'lastOrder', 'alamats', 'alamatUtama'));
     }
 
+    public function saveAddress(Request $request)
+    {
+        $request->validate([
+            'no_hp' => 'required|string|max:20',
+            'alamat_pengiriman' => 'required|string|max:500',
+        ], [
+            'no_hp.required' => 'Nomor HP wajib diisi.',
+            'alamat_pengiriman.required' => 'Alamat lengkap wajib diisi.',
+        ]);
+
+        $alamat = $this->simpanAlamatCheckout(
+            Auth::user(),
+            $request->no_hp,
+            $request->alamat_pengiriman
+        );
+
+        return response()->json([
+            'message' => 'Alamat berhasil disimpan dan dijadikan alamat utama.',
+            'address' => $alamat,
+        ]);
+    }
+
     public function process(Request $request)
     {
         $request->validate([
@@ -162,6 +223,14 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
+            if (!$user->alamats()->exists()) {
+                $this->simpanAlamatCheckout(
+                    $user,
+                    $request->no_hp,
+                    $request->alamat_pengiriman
+                );
+            }
+
             // Validasi stok sebelum proses
             foreach ($items as $item) {
                 $produk = Produk::find($item->id_produk);

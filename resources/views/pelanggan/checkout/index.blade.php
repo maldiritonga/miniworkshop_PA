@@ -58,6 +58,7 @@
         selectedShipping: '',
         shippingOptions: [],
         isFetchingRates: false,
+        savingAddress: false,
         totalWeight: {{ $totalWeight ?? 1000 }},
 
         getCourierLabel(code) {
@@ -179,6 +180,66 @@
             } finally {
                 this.isFetchingRates = false;
             }
+        },
+
+        async confirmAddress() {
+            const noHp = (document.querySelector('input[name=&quot;no_hp&quot;]')?.value || '').trim();
+
+            if (!noHp) {
+                alert('Nomor telepon wajib diisi.');
+                return;
+            }
+
+            if (!this.fullAddress || !this.fullAddress.trim()) {
+                alert('Alamat lengkap wajib diisi.');
+                return;
+            }
+
+            try {
+                this.savingAddress = true;
+
+                const response = await fetch('{{ route("checkout.save-address") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        no_hp: noHp,
+                        alamat_pengiriman: this.fullAddress
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    const firstError = data.errors ? Object.values(data.errors).flat()[0] : null;
+                    throw new Error(firstError || data.message || 'Gagal menyimpan alamat.');
+                }
+
+                if (data.address) {
+                    const savedAddressId = data.address.id_alamat;
+                    const existingIndex = this.addresses.findIndex(item => item.id_alamat === savedAddressId);
+
+                    this.addresses = this.addresses
+                        .map(item => ({ ...item, is_utama: false }));
+
+                    if (existingIndex >= 0) {
+                        this.addresses[existingIndex] = { ...data.address, is_utama: true };
+                    } else {
+                        this.addresses.unshift({ ...data.address, is_utama: true });
+                    }
+
+                    this.selectedAddress = this.addresses.find(item => item.id_alamat === savedAddressId) || { ...data.address, is_utama: true };
+                }
+
+                this.editAddress = false;
+            } catch (error) {
+                alert(error.message || 'Gagal menyimpan alamat.');
+            } finally {
+                this.savingAddress = false;
+            }
         }
     }">
         <x-flash-message />
@@ -218,8 +279,7 @@
                     </div>
 
                     {{-- Tampilan alamat tersimpan dari profil --}}
-                    @if($alamats->isNotEmpty())
-                    <div x-show="!editAddress">
+                    <div x-show="addresses.length > 0 && !editAddress">
                         <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
                             <div class="flex-1">
                                 <template x-if="selectedAddress">
@@ -246,10 +306,9 @@
                             </button>
                         </div>
                     </div>
-                    @endif
 
                     {{-- Form input manual (jika tidak ada alamat tersimpan) --}}
-                    <div x-show="editAddress || {{ $alamats->isEmpty() ? 'true' : 'false' }}" class="space-y-6">
+                    <div x-show="editAddress || addresses.length === 0" class="space-y-6">
                         <input type="hidden" name="alamat_pengiriman" x-bind:value="fullAddress" :disabled="!editAddress">
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -308,10 +367,11 @@
                         </div>
 
                         <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
-                            @if($alamats->isNotEmpty())
-                            <button type="button" @click="editAddress = false" class="px-6 py-2.5 border-2 border-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-50 transition">Batal</button>
-                            @endif
-                            <button type="button" @click="if(fullAddress) { editAddress = false; savedAddress = fullAddress; fetchRates(fullAddress); } " class="px-6 py-2.5 bg-yellow-400 text-gray-900 font-bold rounded-xl text-sm hover:bg-yellow-500 transition">Konfirmasi</button>
+                            <button type="button" x-show="addresses.length > 0" @click="editAddress = false" class="px-6 py-2.5 border-2 border-gray-200 text-gray-700 font-semibold rounded-xl text-sm hover:bg-gray-50 transition">Batal</button>
+                            <button type="button" @click="confirmAddress()" :disabled="savingAddress" class="px-6 py-2.5 bg-yellow-400 text-gray-900 font-bold rounded-xl text-sm hover:bg-yellow-500 transition disabled:opacity-60 disabled:cursor-not-allowed">
+                                <span x-show="!savingAddress">Konfirmasi</span>
+                                <span x-show="savingAddress">Menyimpan...</span>
+                            </button>
                         </div>
                     </div>
 
@@ -502,8 +562,8 @@
                         <div class="flex flex-col sm:flex-row items-center gap-8 bg-gray-50 rounded-2xl p-6">
                             <div class="shrink-0 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
                                 {{-- Placeholder QR Code --}}
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=MiniWorkshopQRIS2026&bgcolor=ffffff&color=000000&margin=10"
-                                    alt="QRIS Mini Workshop" class="w-40 h-40">
+                                <img src="{{ asset('images/QrisStatisMiniworkshop.png') }}"
+                                    alt="QRIS Mini Workshop" class="w-40 h-40 object-contain">
                             </div>
                             <div>
                                 <div class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">QRIS</div>
