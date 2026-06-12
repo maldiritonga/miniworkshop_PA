@@ -22,6 +22,11 @@ class ReturController extends Controller
             ->where('status_pesanan', 'selesai')
             ->findOrFail($id_pesanan);
 
+        if ($pesanan->updated_at->copy()->addDays(7)->isPast()) {
+            \flash('Pesanan sudah melewati batas waktu pengembalian (1 minggu) sehingga tidak bisa diretur lagi.')->error();
+            return redirect()->route('pesanan.show', $id_pesanan);
+        }
+
         $request->validate([
             'id_produk'      => 'required|exists:produk,id_produk',
             'alasan_retur'   => 'required|string|max:500',

@@ -186,7 +186,8 @@
                         @php
                             $returItem = $pesanan->retur->firstWhere('id_produk', $item->id_produk);
                             $sudahRetur = $returItem !== null;
-                            $bisaAjukanRetur = in_array($pesanan->status_pesanan, ['selesai', 'diretur'], true) && ! $sudahRetur;
+                            $isReturExpired = $pesanan->updated_at->copy()->addDays(7)->isPast();
+                            $bisaAjukanRetur = in_array($pesanan->status_pesanan, ['selesai', 'diretur'], true) && ! $sudahRetur && ! $isReturExpired;
                             $returBadge = $returItem ? \App\Models\Retur::statusBadge($returItem->status_retur) : null;
                         @endphp
                         <div id="retur-produk-{{ $item->id_produk }}" class="rounded-2xl {{ $returItem?->canPrintLabel() ? 'ring-2 ring-indigo-200 bg-indigo-50/40 p-4 -mx-1' : '' }}">
