@@ -215,9 +215,30 @@ class BiteshipService
                 ];
             }
 
-            // Dapatkan kodepos dari alamat pengiriman
-            preg_match('/\b\d{5}\b/', $pesanan->alamat_pengiriman, $matches);
-            $kodepos = $matches[0] ?? '12345'; // Default dummy jika tidak ketemu sama sekali
+            // Cari Area ID dan Kode Pos dari Biteship berdasarkan alamat
+            $areaResponse = Http::withHeaders([
+                'Authorization' => $this->apiKey,
+            ])->get("{$this->baseUrl}/maps/areas", [
+                'countries' => 'ID',
+                'input' => $pesanan->alamat_pengiriman,
+                'type' => 'single'
+            ]);
+
+            $destinationAreaId = null;
+            $destinationPostalCode = null;
+
+            if ($areaResponse->successful() && !empty($areaResponse->json()['areas'])) {
+                $area = $areaResponse->json()['areas'][0];
+                $destinationAreaId = $area['id'] ?? null;
+                $destinationPostalCode = $area['postal_code'] ?? null;
+            }
+
+            // Fallback jika tidak dapat dari API
+            if (!$destinationPostalCode) {
+                preg_match('/\b\d{5}\b/', $pesanan->alamat_pengiriman, $matches);
+                // Default ke kodepos asal jika sama sekali tidak ada yang valid (12345 sering ditolak)
+                $destinationPostalCode = $matches[0] ?? 28155; 
+            }
 
             $payload = [
                 // Info Pengirim (Toko Anda)
@@ -230,7 +251,7 @@ class BiteshipService
                 "destination_contact_name" => $pesanan->user->nama ?? 'Pelanggan',
                 "destination_contact_phone" => $pesanan->no_hp,
                 "destination_address" => $pesanan->alamat_pengiriman,
-                "destination_postal_code" => (int) $kodepos,
+                "destination_postal_code" => (int) $destinationPostalCode,
                 
                 // Info Kurir
                 "courier_company" => strtolower($pesanan->kurir ?? 'jne'),
@@ -240,6 +261,10 @@ class BiteshipService
                 "items" => $items,
                 "reference_id" => (string) $pesanan->id_pesanan . '_' . time(),
             ];
+
+            if ($destinationAreaId) {
+                $payload["destination_area_id"] = $destinationAreaId;
+            }
 
             $response = Http::withHeaders([
                 'Authorization' => $this->apiKey,
