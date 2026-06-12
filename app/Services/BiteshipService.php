@@ -240,6 +240,15 @@ class BiteshipService
                 $destinationPostalCode = $matches[0] ?? 28155; 
             }
 
+            $courierCompany = strtolower($pesanan->kurir ?? 'jne');
+            $courierType = 'reg';
+            
+            if ($courierCompany === 'jnt') {
+                $courierType = 'ez';
+            } elseif ($courierCompany === 'sicepat') {
+                $courierType = 'reg';
+            }
+
             $payload = [
                 // Info Pengirim (Toko Anda)
                 "origin_contact_name" => "Mini Workshop",
@@ -254,8 +263,8 @@ class BiteshipService
                 "destination_postal_code" => (int) $destinationPostalCode,
                 
                 // Info Kurir
-                "courier_company" => strtolower($pesanan->kurir ?? 'jne'),
-                "courier_type" => "reg", // Default reg, harusnya dari DB layanan_kurir
+                "courier_company" => $courierCompany,
+                "courier_type" => $courierType,
                 "delivery_type" => "now", // Pickup secepatnya
                 
                 "items" => $items,
