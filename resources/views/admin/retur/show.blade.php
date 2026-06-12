@@ -161,12 +161,12 @@
                 <div class="mt-6 space-y-3">
                     @php
                         $steps = [
-                            'diajukan'          => ['label' => 'Retur Diajukan',        'icon' => '📋'],
-                            'menunggu_rekening' => ['label' => 'Menunggu Rekening',     'icon' => '🏦'],
-                            'menunggu_barang'   => ['label' => 'Menunggu Barang',        'icon' => '📦'],
-                            'menunggu_transfer' => ['label' => 'Menunggu Transfer',      'icon' => '💳'],
-                            'uang_ditransfer'   => ['label' => 'Uang Ditransfer',        'icon' => '✅'],
-                            'selesai'           => ['label' => 'Retur Selesai',          'icon' => '🎉'],
+                            'diajukan'          => ['label' => 'Retur Diajukan'],
+                            'menunggu_rekening' => ['label' => 'Menunggu Rekening'],
+                            'menunggu_barang'   => ['label' => 'Menunggu Barang'],
+                            'menunggu_transfer' => ['label' => 'Menunggu Transfer'],
+                            'uang_ditransfer'   => ['label' => 'Uang Ditransfer'],
+                            'selesai'           => ['label' => 'Retur Selesai'],
                         ];
                         $stepOrder = array_keys($steps);
                         $currentIdx = array_search($retur->status_retur, $stepOrder);
@@ -177,7 +177,7 @@
                     <div class="flex items-center gap-3">
                         <div class="w-7 h-7 rounded-full flex items-center justify-center text-[11px]
                             {{ $idx < $currentIdx ? 'bg-green-100 text-green-600' : ($idx === $currentIdx ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-400') }}">
-                            {{ $idx <= $currentIdx ? $step['icon'] : '○' }}
+                            {{ $idx < $currentIdx ? '✓' : ($idx === $currentIdx ? '●' : '○') }}
                         </div>
                         <span class="text-[12px] font-{{ $idx === $currentIdx ? 'black' : 'medium' }}
                             {{ $idx < $currentIdx ? 'text-green-600' : ($idx === $currentIdx ? 'text-indigo-700' : 'text-gray-400') }}">
@@ -248,7 +248,6 @@
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
                 <h3 class="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-4">Status Aksi</h3>
                 <div class="p-4 bg-indigo-50 rounded-2xl text-center">
-                    <div class="text-2xl mb-2">🏦</div>
                     <div class="text-[11px] font-black text-indigo-600 uppercase tracking-widest">Menunggu Pelanggan</div>
                     <div class="text-[11px] text-indigo-400 mt-1">Pelanggan sedang mengisi data rekening bank.</div>
                 </div>
@@ -260,7 +259,6 @@
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
                 <h3 class="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-4">Tindakan Admin</h3>
                 <div class="p-4 bg-purple-50 rounded-2xl text-center mb-4">
-                    <div class="text-2xl mb-2">📦</div>
                     <div class="text-[11px] font-black text-purple-600 uppercase tracking-widest">Menunggu Barang dari Pelanggan</div>
                     <div class="text-[11px] text-purple-400 mt-1">Konfirmasi ketika barang sudah sampai di toko.</div>
                 </div>
@@ -283,7 +281,6 @@
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
                 <h3 class="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-4">Upload Bukti Transfer</h3>
                 <div class="p-4 bg-orange-50 rounded-2xl text-center mb-4">
-                    <div class="text-2xl mb-2">💳</div>
                     <div class="text-[11px] font-black text-orange-600 uppercase tracking-widest">Transfer ke Rekening Pelanggan</div>
                     @if($retur->no_rekening)
                     <div class="mt-2 text-left space-y-1">
@@ -329,7 +326,6 @@
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
                 <h3 class="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-4">Status Aksi</h3>
                 <div class="p-4 bg-blue-50 rounded-2xl text-center">
-                    <div class="text-2xl mb-2">⏳</div>
                     <div class="text-[11px] font-black text-blue-600 uppercase tracking-widest">Menunggu Konfirmasi Pelanggan</div>
                     <div class="text-[11px] text-blue-400 mt-1">Pelanggan akan mengkonfirmasi bahwa dana sudah diterima.</div>
                 </div>
@@ -340,7 +336,6 @@
             @if($retur->status_retur === 'selesai')
             <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
                 <div class="text-center">
-                    <div class="text-4xl mb-3">🎉</div>
                     <div class="text-[12px] font-black text-green-600 uppercase tracking-widest">Retur Selesai</div>
                     <div class="text-[11px] text-gray-400 mt-1">Pelanggan telah mengkonfirmasi penerimaan dana.</div>
                 </div>

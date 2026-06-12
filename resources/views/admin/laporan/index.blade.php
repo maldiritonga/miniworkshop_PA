@@ -79,7 +79,10 @@
                             <div class="text-[10px] text-gray-400 font-medium">{{ $order->no_hp }}</div>
                         </td>
                         <td class="px-8 py-5 text-[13px] text-gray-600 font-medium">{{ $order->tanggal_pesanan }}</td>
-                        <td class="px-8 py-5 font-black text-gray-900 text-[13px]">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
+                        @php
+                            $totalProduk = $order->detail->sum(function($d) { return $d->harga * $d->qty; });
+                        @endphp
+                        <td class="px-8 py-5 font-black text-gray-900 text-[13px]">Rp {{ number_format($totalProduk, 0, ',', '.') }}</td>
                         <td class="px-8 py-5">
                             <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{{ str_replace('_', ' ', $order->status_pesanan) }}</span>
                         </td>

@@ -207,11 +207,14 @@ class BiteshipService
         try {
             $items = [];
             foreach ($pesanan->detail as $item) {
+                $kategori = strtolower($item->produk->kategori->nama_kategori ?? '');
+                $itemWeight = str_contains($kategori, 'sepatu') ? 1500 : 1000;
+                
                 $items[] = [
                     'name' => $item->produk->nama_produk ?? 'Produk',
                     'value' => (int) $item->harga,
                     'quantity' => (int) $item->qty,
-                    'weight' => 500, // Dummy berat 500g
+                    'weight' => $itemWeight,
                 ];
             }
 

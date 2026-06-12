@@ -76,8 +76,10 @@ class CheckoutController extends Controller
                     'id_produk' => $produk->id_produk
                 ]
             ];
+            $kategori = strtolower($produk->kategori->nama_kategori ?? '');
+            $itemWeight = str_contains($kategori, 'sepatu') ? 1500 : 1000;
             $subtotal = $produk->harga;
-            $totalWeight = 500; // 1 qty * 500g
+            $totalWeight = $itemWeight; // qty * weight
             $isDirect = true;
         } elseif ($request->has('cart_item_ids')) {
             // Partial cart checkout
@@ -102,7 +104,9 @@ class CheckoutController extends Controller
             });
             
             $totalWeight = $items->sum(function($item) {
-                return $item->qty * 500;
+                $kategori = strtolower($item->produk->kategori->nama_kategori ?? '');
+                $itemWeight = str_contains($kategori, 'sepatu') ? 1500 : 1000;
+                return $item->qty * $itemWeight;
             });
         } else {
             // Full cart checkout (default)
@@ -127,7 +131,9 @@ class CheckoutController extends Controller
             });
 
             $totalWeight = $items->sum(function($item) {
-                return $item->qty * 500;
+                $kategori = strtolower($item->produk->kategori->nama_kategori ?? '');
+                $itemWeight = str_contains($kategori, 'sepatu') ? 1500 : 1000;
+                return $item->qty * $itemWeight;
             });
         }
 
