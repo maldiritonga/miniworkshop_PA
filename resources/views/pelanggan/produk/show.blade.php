@@ -131,7 +131,7 @@
                                         }
                                         let h = Math.floor(this.seconds / 3600);
                                         let m = Math.floor((this.seconds % 3600) / 60);
-                                        let s = this.seconds % 60;
+                                        let s = Math.floor(this.seconds % 60);
                                         return h + ' jam ' + m + ' menit ' + s + ' detik';
                                     },
                                     init() {
