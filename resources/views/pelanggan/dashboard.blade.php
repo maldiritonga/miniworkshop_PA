@@ -101,11 +101,11 @@
                 <div class="group cursor-pointer">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
                         @if($item->gambar_url)
-                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
+                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
                                 <img src="{{ $item->gambar_url }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
                             </a>
                         @else
-                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
+                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
                                 <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=400&q=80" alt="Default Product" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
                             </a>
                         @endif
@@ -125,7 +125,7 @@
                     <div class="px-2">
                         <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">{{ $item->kategori->nama_kategori }}</div>
                         @if($item->stok > 0)
-                        <a href="{{ route('produk.show', $item->id_produk) }}" class="font-bold text-gray-900 text-sm mb-1 truncate block hover:text-yellow-600 transition">
+                        <a href="{{ route('produk.show', $item->slug) }}" class="font-bold text-gray-900 text-sm mb-1 truncate block hover:text-yellow-600 transition">
                             {{ $item->nama_produk }}
                         </a>
                         @else
@@ -182,11 +182,11 @@
                 <div class="group cursor-pointer">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
                         @if($item->gambar_url)
-                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
+                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
                                 <img src="{{ $item->gambar_url }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
                             </a>
                         @else
-                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->id_produk) : '#' }}">
+                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
                                 <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=400&q=80" alt="Default Product" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
                             </a>
                         @endif
@@ -206,7 +206,7 @@
                     <div class="px-2">
                         <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">{{ $item->kategori->nama_kategori }} | {{ $item->size }}</div>
                         @if($item->stok > 0)
-                        <a href="{{ route('produk.show', $item->id_produk) }}" class="font-bold text-gray-900 text-sm mb-1 truncate block hover:text-yellow-600 transition">{{ $item->nama_produk }}</a>
+                        <a href="{{ route('produk.show', $item->slug) }}" class="font-bold text-gray-900 text-sm mb-1 truncate block hover:text-yellow-600 transition">{{ $item->nama_produk }}</a>
                         @else
                         <span class="font-bold text-gray-400 text-sm mb-1 truncate block">{{ $item->nama_produk }}</span>
                         @endif

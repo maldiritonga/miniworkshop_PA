@@ -27,7 +27,37 @@ class Produk extends Model
         'diskon_persen',
         'diskon_mulai',
         'diskon_selesai',
+        'slug',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($produk) {
+            if (empty($produk->slug)) {
+                $produk->slug = static::generateUniqueSlug($produk->nama_produk);
+            }
+        });
+
+        static::updating(function ($produk) {
+            if ($produk->isDirty('nama_produk') && empty($produk->slug)) {
+                $produk->slug = static::generateUniqueSlug($produk->nama_produk);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug($title, $ignoreId = 0)
+    {
+        $slug = \Illuminate\Support\Str::slug($title);
+        $originalSlug = $slug;
+        $count = 1;
+
+        while (static::where('slug', $slug)->where('id_produk', '!=', $ignoreId)->exists()) {
+            $slug = "{$originalSlug}-{$count}";
+            $count++;
+        }
+
+        return $slug;
+    }
 
     public function scopeAktif($query)
     {

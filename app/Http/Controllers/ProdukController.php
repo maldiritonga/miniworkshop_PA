@@ -25,9 +25,9 @@ class ProdukController extends Controller
         abort(404);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $produk = Produk::with('kategori')->findOrFail($id);
+        $produk = Produk::with('kategori')->where('slug', $slug)->firstOrFail();
         return view('pelanggan.produk.show', compact('produk'));
     }
 }

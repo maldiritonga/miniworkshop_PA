@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/media/produk/{filename}', [ProdukController::class, 'image'])
     ->where('filename', '.*')
     ->name('produk.image');
-Route::get('/produk/{id}', [ProdukController::class, 'show'])->name('produk.show');
+Route::get('/produk/{slug}', [ProdukController::class, 'show'])->name('produk.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('keranjang.index');
