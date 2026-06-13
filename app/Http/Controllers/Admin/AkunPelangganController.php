@@ -25,4 +25,20 @@ class AkunPelangganController extends Controller
 
         return redirect()->route('admin.akun-pelanggan.index');
     }
+
+    public function destroy($id)
+    {
+        $pelanggan = User::where('role', 'pelanggan')->findOrFail($id);
+        
+        // Hapus foto profil jika ada
+        if ($pelanggan->foto_profil && file_exists(public_path('images/profil/' . $pelanggan->foto_profil))) {
+            unlink(public_path('images/profil/' . $pelanggan->foto_profil));
+        }
+
+        $pelanggan->delete();
+
+        \flash("Akun pelanggan berhasil dihapus.")->success();
+
+        return redirect()->route('admin.akun-pelanggan.index');
+    }
 }

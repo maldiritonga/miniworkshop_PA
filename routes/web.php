@@ -136,6 +136,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::resource('akun-kasir', \App\Http\Controllers\Admin\AkunKasirController::class)->names('akun-kasir');
         Route::get('akun-pelanggan', [\App\Http\Controllers\Admin\AkunPelangganController::class, 'index'])->name('akun-pelanggan.index');
         Route::post('akun-pelanggan/{id}/toggle-block', [\App\Http\Controllers\Admin\AkunPelangganController::class, 'toggleBlock'])->name('akun-pelanggan.toggle-block');
+        Route::delete('akun-pelanggan/{id}', [\App\Http\Controllers\Admin\AkunPelangganController::class, 'destroy'])->name('akun-pelanggan.destroy');
     });
 
     // Retur - bisa diakses admin dan kasir

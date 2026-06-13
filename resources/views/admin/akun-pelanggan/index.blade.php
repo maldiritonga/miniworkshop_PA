@@ -52,21 +52,32 @@
                             @endif
                         </td>
                         <td class="px-8 py-5">
-                            <form action="{{ route('admin.akun-pelanggan.toggle-block', $item->id_user) }}" method="POST"
-                                onsubmit="return confirm('{{ $item->is_blocked ? 'Aktifkan kembali akun ' . $item->nama . '?' : 'Blokir akun ' . $item->nama . '? Akun ini tidak akan bisa login.' }}')">
-                                @csrf
-                                @if($item->is_blocked)
-                                    <button type="submit"
-                                        class="px-4 py-2 bg-green-50 text-green-600 text-xs font-black rounded-xl hover:bg-green-500 hover:text-white transition uppercase tracking-widest">
-                                        Aktifkan
-                                    </button>
-                                @else
+                            <div class="flex items-center gap-2">
+                                <form action="{{ route('admin.akun-pelanggan.toggle-block', $item->id_user) }}" method="POST"
+                                    onsubmit="return confirm('{{ $item->is_blocked ? 'Aktifkan kembali akun ' . $item->nama . '?' : 'Blokir akun ' . $item->nama . '? Akun ini tidak akan bisa login.' }}')">
+                                    @csrf
+                                    @if($item->is_blocked)
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-green-50 text-green-600 text-xs font-black rounded-xl hover:bg-green-500 hover:text-white transition uppercase tracking-widest">
+                                            Aktifkan
+                                        </button>
+                                    @else
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-orange-50 text-orange-500 text-xs font-black rounded-xl hover:bg-orange-500 hover:text-white transition uppercase tracking-widest">
+                                            Blokir
+                                        </button>
+                                    @endif
+                                </form>
+                                <form action="{{ route('admin.akun-pelanggan.destroy', $item->id_user) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus akun {{ $item->nama }} secara permanen? Semua data terkait pengguna ini mungkin akan hilang dan tindakan ini tidak dapat dibatalkan.')">
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit"
                                         class="px-4 py-2 bg-red-50 text-red-500 text-xs font-black rounded-xl hover:bg-red-500 hover:text-white transition uppercase tracking-widest">
-                                        Blokir
+                                        Hapus
                                     </button>
-                                @endif
-                            </form>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @empty
