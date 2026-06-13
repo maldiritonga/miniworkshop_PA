@@ -10,6 +10,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-[#F9F9F9] text-gray-900" x-data="{ sidebarOpen: false }">

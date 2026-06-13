@@ -81,7 +81,32 @@
                     </div>
                 </div>
 
-                <!-- Row 4: Gambar (Pake Padding) -->
+                <!-- Row 4: Diskon -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div>
+                        <label for="diskon_persen" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Diskon (%)</label>
+                        <input type="number" name="diskon_persen" id="diskon_persen" min="0" max="100" value="{{ old('diskon_persen', $produk->diskon_persen) }}"
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900 placeholder-gray-400"
+                               placeholder="Contoh: 10">
+                        <x-input-error :messages="$errors->get('diskon_persen')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <label for="diskon_mulai" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Tanggal Mulai Diskon</label>
+                        <input type="datetime-local" name="diskon_mulai" id="diskon_mulai" value="{{ old('diskon_mulai', $produk->diskon_mulai ? \Carbon\Carbon::parse($produk->diskon_mulai)->format('Y-m-d\TH:i') : '') }}"
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900 placeholder-gray-400">
+                        <x-input-error :messages="$errors->get('diskon_mulai')" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <label for="diskon_selesai" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Tanggal Selesai Diskon</label>
+                        <input type="datetime-local" name="diskon_selesai" id="diskon_selesai" value="{{ old('diskon_selesai', $produk->diskon_selesai ? \Carbon\Carbon::parse($produk->diskon_selesai)->format('Y-m-d\TH:i') : '') }}"
+                               class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900 placeholder-gray-400">
+                        <x-input-error :messages="$errors->get('diskon_selesai')" class="mt-2" />
+                    </div>
+                </div>
+
+                <!-- Row 5: Gambar (Pake Padding) -->
                 <div>
                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Gambar Produk</label>
                     <label class="relative block w-full py-16 bg-gray-50 rounded-[32px] border-2 border-dashed border-gray-200 overflow-hidden cursor-pointer group transition-all hover:bg-gray-100/50 text-center">

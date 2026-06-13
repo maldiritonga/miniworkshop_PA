@@ -71,14 +71,14 @@ class CheckoutController extends Controller
             $items = [
                 (object)[
                     'produk' => $produk,
-                    'harga' => $produk->harga,
+                    'harga' => $produk->harga_akhir,
                     'qty' => 1,
                     'id_produk' => $produk->id_produk
                 ]
             ];
             $kategori = strtolower($produk->kategori->nama_kategori ?? '');
             $itemWeight = str_contains($kategori, 'sepatu') ? 1500 : 1000;
-            $subtotal = $produk->harga;
+            $subtotal = $produk->harga_akhir;
             $totalWeight = $itemWeight; // qty * weight
             $isDirect = true;
         } elseif ($request->has('cart_item_ids')) {
@@ -100,7 +100,7 @@ class CheckoutController extends Controller
             }
 
             $subtotal = $items->sum(function($item) {
-                return $item->harga * $item->qty;
+                return $item->produk->harga_akhir * $item->qty;
             });
             
             $totalWeight = $items->sum(function($item) {
@@ -127,7 +127,7 @@ class CheckoutController extends Controller
             }
             
             $subtotal = $items->sum(function($item) {
-                return $item->harga * $item->qty;
+                return $item->produk->harga_akhir * $item->qty;
             });
 
             $totalWeight = $items->sum(function($item) {
@@ -203,17 +203,17 @@ class CheckoutController extends Controller
             $items = [
                 (object)[
                     'id_produk' => $produk->id_produk,
-                    'harga' => $produk->harga,
+                    'harga' => $produk->harga_akhir,
                     'qty' => 1,
                     'produk' => $produk
                 ]
             ];
-            $total = $produk->harga + $ongkir;
+            $total = $produk->harga_akhir + $ongkir;
         } elseif ($request->has('cart_item_ids')) {
             // Process partial cart
             $items = KeranjangDetail::whereIn('id_keranjang_detail', $request->cart_item_ids)->get();
             $total = $items->sum(function($item) {
-                return $item->harga * $item->qty;
+                return $item->produk->harga_akhir * $item->qty;
             }) + $ongkir;
         } else {
             // Process full cart
@@ -223,7 +223,7 @@ class CheckoutController extends Controller
             }
             $items = KeranjangDetail::where('id_keranjang', $keranjang->id_keranjang)->get();
             $total = $items->sum(function($item) {
-                return $item->harga * $item->qty;
+                return $item->produk->harga_akhir * $item->qty;
             }) + $ongkir;
         }
 
@@ -267,7 +267,7 @@ class CheckoutController extends Controller
                 DetailPesanan::create([
                     'id_pesanan' => $pesanan->id_pesanan,
                     'id_produk' => $item->id_produk,
-                    'harga' => $item->harga,
+                    'harga' => $item->produk ? $item->produk->harga_akhir : $item->harga,
                     'qty' => $item->qty,
                 ]);
 

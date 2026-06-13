@@ -24,6 +24,9 @@ class Produk extends Model
         'gambar',
         'status_produk',
         'id_kategori',
+        'diskon_persen',
+        'diskon_mulai',
+        'diskon_selesai',
     ];
 
     public function scopeAktif($query)
@@ -39,6 +42,40 @@ class Produk extends Model
     public function isStokRendah(): bool
     {
         return $this->stok < self::STOK_BATAS_RENDAH;
+    }
+
+    public function isDiskonAktif(): bool
+    {
+        if ($this->diskon_persen <= 0) {
+            return false;
+        }
+
+        $now = now();
+        $mulai = $this->diskon_mulai ? \Carbon\Carbon::parse($this->diskon_mulai) : null;
+        $selesai = $this->diskon_selesai ? \Carbon\Carbon::parse($this->diskon_selesai) : null;
+
+        if ($mulai && $selesai) {
+            return $now->between($mulai, $selesai);
+        }
+
+        if ($mulai) {
+            return $now->greaterThanOrEqualTo($mulai);
+        }
+
+        if ($selesai) {
+            return $now->lessThanOrEqualTo($selesai);
+        }
+
+        return true; // jika tidak ada batas tanggal tapi persen > 0
+    }
+
+    public function getHargaAkhirAttribute()
+    {
+        if ($this->isDiskonAktif()) {
+            $diskon = ($this->harga * $this->diskon_persen) / 100;
+            return $this->harga - $diskon;
+        }
+        return $this->harga;
     }
 
     public function kategori()

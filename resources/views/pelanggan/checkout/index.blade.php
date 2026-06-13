@@ -442,9 +442,9 @@
                             <span class="text-xs font-medium text-gray-500 mt-1 bg-gray-100 w-fit px-2 py-0.5 rounded-md">Variasi: {{ $item->produk->size }}</span>
                         </div>
                     </div>
-                    <div class="col-span-2 text-center text-sm font-medium text-gray-600">Rp{{ number_format($item->harga, 0, ',', '.') }}</div>
+                    <div class="col-span-2 text-center text-sm font-medium text-gray-600">Rp{{ number_format($item->produk->harga_akhir ?? $item->harga, 0, ',', '.') }}</div>
                     <div class="col-span-2 text-center text-sm font-bold text-gray-900">{{ $item->qty }}</div>
-                    <div class="col-span-2 text-right text-sm font-bold text-gray-900">Rp{{ number_format($item->harga * $item->qty, 0, ',', '.') }}</div>
+                    <div class="col-span-2 text-right text-sm font-bold text-gray-900">Rp{{ number_format(($item->produk->harga_akhir ?? $item->harga) * $item->qty, 0, ',', '.') }}</div>
                 </div>
                 @endforeach
 

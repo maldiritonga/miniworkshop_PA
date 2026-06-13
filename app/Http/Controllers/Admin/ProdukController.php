@@ -39,6 +39,9 @@ class ProdukController extends Controller
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'diskon_persen' => 'nullable|integer|min:0|max:100',
+            'diskon_mulai' => 'nullable|date',
+            'diskon_selesai' => 'nullable|date|after_or_equal:diskon_mulai',
         ]);
 
         $data = $request->all();
@@ -71,6 +74,9 @@ class ProdukController extends Controller
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'diskon_persen' => 'nullable|integer|min:0|max:100',
+            'diskon_mulai' => 'nullable|date',
+            'diskon_selesai' => 'nullable|date|after_or_equal:diskon_mulai',
         ]);
 
         $data = $request->all();
@@ -122,5 +128,33 @@ class ProdukController extends Controller
         if (file_exists($legacyPath)) {
             @unlink($legacyPath);
         }
+    }
+
+    public function updateDiscount(Request $request, $id)
+    {
+        $request->validate([
+            'diskon_persen' => 'required|integer|min:0|max:100',
+            'diskon_mulai' => 'nullable|date',
+            'diskon_selesai' => 'nullable|date|after_or_equal:diskon_mulai',
+        ]);
+
+        $produk = Produk::findOrFail($id);
+        
+        $diskon_mulai = $request->diskon_mulai;
+        $diskon_selesai = $request->diskon_selesai;
+
+        if ($request->diskon_persen > 0) {
+            if (!$diskon_mulai) {
+                $diskon_mulai = now();
+            }
+        }
+
+        $produk->update([
+            'diskon_persen' => $request->diskon_persen,
+            'diskon_mulai' => $diskon_mulai,
+            'diskon_selesai' => $diskon_selesai,
+        ]);
+
+        return redirect()->back()->with('success', 'Diskon berhasil diperbarui.');
     }
 }

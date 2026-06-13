@@ -109,7 +109,54 @@
                 </div>
 
                 <div class="mb-10">
-                    <div class="text-3xl font-black text-gray-900 mb-2">Rp {{ number_format($produk->harga, 0, ',', '.') }}</div>
+                    @if($produk->isDiskonAktif())
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="px-2 py-1 bg-red-100 text-red-600 text-xs font-black rounded-md">Diskon {{ $produk->diskon_persen }}%</span>
+                            <span class="text-xl font-medium text-gray-400 line-through">Rp {{ number_format($produk->harga, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="text-3xl md:text-4xl font-black text-red-500 mb-2">Rp {{ number_format($produk->harga_akhir, 0, ',', '.') }}</div>
+                        @if($produk->diskon_selesai)
+                            @php
+                                $endTime = \Carbon\Carbon::parse($produk->diskon_selesai);
+                                $diffInSeconds = now()->diffInSeconds($endTime, false);
+                                $isLessThan24h = $diffInSeconds > 0 && $diffInSeconds <= 86400;
+                            @endphp
+                            <div x-data="{
+                                    seconds: {{ $diffInSeconds > 0 ? $diffInSeconds : 0 }},
+                                    isLessThan24h: {{ $isLessThan24h ? 'true' : 'false' }},
+                                    timeRemaining: '',
+                                    formatTime() {
+                                        if (this.seconds <= 0) {
+                                            return 'segera berakhir...';
+                                        }
+                                        let h = Math.floor(this.seconds / 3600);
+                                        let m = Math.floor((this.seconds % 3600) / 60);
+                                        let s = this.seconds % 60;
+                                        return h + ' jam ' + m + ' menit ' + s + ' detik';
+                                    },
+                                    init() {
+                                        if (this.isLessThan24h) {
+                                            this.timeRemaining = this.formatTime();
+                                            setInterval(() => {
+                                                if (this.seconds > 0) {
+                                                    this.seconds--;
+                                                    this.timeRemaining = this.formatTime();
+                                                }
+                                            }, 1000);
+                                        }
+                                    }
+                                }" class="text-xs font-bold text-red-500 mb-3 bg-red-50 inline-block px-3 py-1 rounded-md border border-red-100">
+                                <template x-if="isLessThan24h">
+                                    <span>⏳ Promo berakhir dalam: <span x-text="timeRemaining"></span></span>
+                                </template>
+                                <template x-if="!isLessThan24h">
+                                    <span>⏳ Promo berakhir pada: {{ $endTime->translatedFormat('d F Y, H:i') }} WIB</span>
+                                </template>
+                            </div>
+                        @endif
+                    @else
+                        <div class="text-3xl md:text-4xl font-black text-gray-900 mb-2">Rp {{ number_format($produk->harga, 0, ',', '.') }}</div>
+                    @endif
                     <p class="text-gray-400 text-xs font-medium uppercase tracking-widest">Harga belum termasuk ongkir</p>
                 </div>
 
@@ -118,7 +165,7 @@
                 </div>
 
                 <!-- Buttons side by side as in image -->
-                <div class="mt-auto grid grid-cols-1 sm:grid-cols-2 gap-4" x-data="{ offlineOpen: false }">
+                <div class="mt-auto grid grid-cols-1 sm:grid-cols-2 gap-4" x-data="{ offlineOpen: false, diskonOpen: false }">
                     <form action="{{ route('keranjang.add', $produk->id_produk) }}" method="POST">
                         @csrf
                         @if($produk->stok > 0)
@@ -151,12 +198,18 @@
                     </form>
 
                     @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'kasir']))
-                    <div class="sm:col-span-2 mt-4">
+                    <div class="sm:col-span-2 mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <button @click="offlineOpen = true" class="w-full py-4 bg-blue-600 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-blue-700 transition shadow-lg flex items-center justify-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                             Transaksi Offline (Staf)
+                        </button>
+                        <button @click="diskonOpen = true" class="w-full py-4 bg-purple-600 text-white font-black text-xs uppercase tracking-widest rounded-xl hover:bg-purple-700 transition shadow-lg flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                            Atur Diskon
                         </button>
                     </div>
 
@@ -189,6 +242,37 @@
                                 <div class="flex gap-3 pt-4">
                                     <button type="button" @click="offlineOpen = false" class="flex-1 py-4 bg-gray-100 text-gray-500 text-xs font-black rounded-2xl uppercase tracking-widest">Batal</button>
                                     <button type="submit" class="flex-1 py-4 bg-blue-600 text-white text-xs font-black rounded-2xl shadow-lg shadow-blue-200 uppercase tracking-widest">Proses</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Diskon Modal -->
+                    <div x-show="diskonOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                        <div @click.away="diskonOpen = false" class="bg-white rounded-[32px] p-8 w-full max-w-md shadow-2xl">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Atur Diskon Produk</h3>
+                            <p class="text-sm text-gray-500 mb-6">Produk: <span class="font-bold text-gray-900">{{ $produk->nama_produk }}</span></p>
+                            
+                            <form action="{{ route('admin.produk.update-discount', $produk->id_produk) }}" method="POST" class="space-y-4">
+                                @csrf
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Persentase Diskon (%)</label>
+                                    <input type="number" name="diskon_persen" value="{{ $produk->diskon_persen ?? 0 }}" min="0" max="100" required
+                                        class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-purple-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Mulai Diskon</label>
+                                    <input type="datetime-local" name="diskon_mulai" value="{{ $produk->diskon_mulai ? \Carbon\Carbon::parse($produk->diskon_mulai)->format('Y-m-d\TH:i') : '' }}"
+                                        class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-purple-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Selesai Diskon</label>
+                                    <input type="datetime-local" name="diskon_selesai" value="{{ $produk->diskon_selesai ? \Carbon\Carbon::parse($produk->diskon_selesai)->format('Y-m-d\TH:i') : '' }}"
+                                        class="w-full bg-gray-50 border-none rounded-2xl p-4 text-sm font-bold focus:ring-2 focus:ring-purple-400">
+                                </div>
+                                <div class="flex gap-3 pt-4">
+                                    <button type="button" @click="diskonOpen = false" class="flex-1 py-4 bg-gray-100 text-gray-500 text-xs font-black rounded-2xl uppercase tracking-widest">Batal</button>
+                                    <button type="submit" class="flex-1 py-4 bg-purple-600 text-white text-xs font-black rounded-2xl shadow-lg shadow-purple-200 uppercase tracking-widest">Simpan</button>
                                 </div>
                             </form>
                         </div>

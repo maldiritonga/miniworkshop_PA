@@ -113,6 +113,13 @@
                         <div class="absolute inset-0 flex items-center justify-center">
                             <span class="bg-black/60 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full">Stok Habis</span>
                         </div>
+                        @elseif($item->isDiskonAktif())
+                        <div class="absolute top-3 right-3 bg-red-500/95 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl shadow-lg text-right z-10 border border-red-400">
+                            <div class="text-[10px] font-black tracking-widest uppercase">Diskon {{ $item->diskon_persen }}%</div>
+                            @if($item->diskon_selesai)
+                                <div class="text-[8px] font-semibold opacity-90 mt-0.5">s.d. {{ \Carbon\Carbon::parse($item->diskon_selesai)->translatedFormat('d M Y') }}</div>
+                            @endif
+                        </div>
                         @endif
                     </div>
                     <div class="px-2">
@@ -125,7 +132,14 @@
                         <span class="font-bold text-gray-400 text-sm mb-1 truncate block">{{ $item->nama_produk }}</span>
                         @endif
                         <div class="flex justify-between items-center">
-                            <div class="text-[11px] font-bold {{ $item->stok > 0 ? 'text-yellow-600/80' : 'text-gray-400' }}">Rp {{ number_format($item->harga, 0, ',', '.') }}</div>
+                            <div class="text-[11px] font-bold {{ $item->stok > 0 ? 'text-yellow-600/80' : 'text-gray-400' }}">
+                                @if($item->isDiskonAktif())
+                                    <span class="line-through text-xs font-normal text-gray-400 mr-1">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                    Rp {{ number_format($item->harga_akhir, 0, ',', '.') }}
+                                @else
+                                    Rp {{ number_format($item->harga, 0, ',', '.') }}
+                                @endif
+                            </div>
                             @if($item->stok > 0)
                                 <span class="text-[9px] px-1.5 py-0.5 bg-green-50 text-green-600 font-bold rounded uppercase tracking-tighter">Tersedia</span>
                             @else
@@ -180,6 +194,13 @@
                         <div class="absolute inset-0 flex items-center justify-center">
                             <span class="bg-black/60 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full">Stok Habis</span>
                         </div>
+                        @elseif($item->isDiskonAktif())
+                        <div class="absolute top-3 right-3 bg-red-500/95 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl shadow-lg text-right z-10 border border-red-400">
+                            <div class="text-[10px] font-black tracking-widest uppercase">Diskon {{ $item->diskon_persen }}%</div>
+                            @if($item->diskon_selesai)
+                                <div class="text-[8px] font-semibold opacity-90 mt-0.5">s.d. {{ \Carbon\Carbon::parse($item->diskon_selesai)->translatedFormat('d M Y') }}</div>
+                            @endif
+                        </div>
                         @endif
                     </div>
                     <div class="px-2">
@@ -190,7 +211,14 @@
                         <span class="font-bold text-gray-400 text-sm mb-1 truncate block">{{ $item->nama_produk }}</span>
                         @endif
                         <div class="flex justify-between items-center mt-2">
-                            <span class="text-sm font-black {{ $item->stok > 0 ? 'text-gray-900' : 'text-gray-400' }}">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                            <div class="flex flex-col">
+                                @if($item->isDiskonAktif())
+                                    <span class="text-xs line-through text-gray-400 font-medium">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                    <span class="text-sm font-black text-red-500">Rp {{ number_format($item->harga_akhir, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="text-sm font-black {{ $item->stok > 0 ? 'text-gray-900' : 'text-gray-400' }}">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                @endif
+                            </div>
                             @if($item->stok > 0)
                                 <span class="text-[10px] px-2 py-1 bg-green-50 text-green-600 font-bold rounded-md uppercase">Tersedia</span>
                             @else

@@ -53,7 +53,7 @@ class CartController extends Controller
             KeranjangDetail::create([
                 'id_keranjang' => $keranjang->id_keranjang,
                 'id_produk' => $produk->id_produk,
-                'harga' => $produk->harga,
+                'harga' => $produk->harga_akhir,
                 'qty' => 1,
             ]);
         }

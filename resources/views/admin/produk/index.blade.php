@@ -9,17 +9,17 @@
             <span class="text-gray-900 font-bold">Produk</span>
         </nav>
 
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex flex-col gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Daftar Produk</h1>
-                <p class="text-gray-500 mt-1">Kelola semua produk di toko</p>
+                <p class="text-gray-500 mt-1 mb-2">Kelola semua produk di toko</p>
+                <a href="{{ route('admin.produk.create') }}" class="w-fit flex items-center gap-2 px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-2xl hover:bg-yellow-500 transition shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Produk Baru
+                </a>
             </div>
-            <a href="{{ route('admin.produk.create') }}" class="w-fit flex items-center gap-2 px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-2xl hover:bg-yellow-500 transition shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Tambah Produk Baru
-            </a>
         </div>
 
         <x-flash-message />

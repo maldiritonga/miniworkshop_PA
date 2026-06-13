@@ -65,7 +65,7 @@
         items: {{ json_encode($items->map(function($item) {
             return [
                 'id' => (string)$item->id_keranjang_detail,
-                'price' => (int)$item->harga,
+                'price' => (int)($item->produk->harga_akhir ?? $item->harga),
                 'qty' => (int)$item->qty,
                 'available' => $item->produk->stok > 0
             ];
@@ -125,7 +125,7 @@
                     <div class="flex-1 min-w-0">
                         <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1 truncate">{{ $item->produk->kategori->nama_kategori }} | {{ $item->produk->size }}</div>
                         <h3 class="font-bold text-gray-900 mb-1 truncate text-sm md:text-base">{{ $item->produk->nama_produk }}</h3>
-                        <div class="text-sm font-black text-gray-900">Rp {{ number_format($item->harga, 0, ',', '.') }}</div>
+                        <div class="text-sm font-black text-gray-900">Rp {{ number_format($item->produk->harga_akhir ?? $item->harga, 0, ',', '.') }}</div>
                     </div>
                     <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
                         @if($item->produk->stok > 0)

@@ -122,6 +122,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('produk', \App\Http\Controllers\Admin\ProdukController::class);
+    Route::post('/produk/{id}/quick-discount', [\App\Http\Controllers\Admin\ProdukController::class, 'updateDiscount'])->name('produk.update-discount');
     Route::get('/offline-transaction', [\App\Http\Controllers\Admin\OfflineTransactionController::class, 'index'])->name('offline-transaction.index');
     Route::post('/offline-transaction', [\App\Http\Controllers\Admin\OfflineTransactionController::class, 'store'])->name('offline-transaction.store');
     Route::resource('pesanan', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update', 'destroy']);
