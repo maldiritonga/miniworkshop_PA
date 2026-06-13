@@ -15,7 +15,7 @@ class CartController extends Controller
         $user = Auth::user();
         $keranjang = Keranjang::where('id_user', $user->id_user)->first();
         
-        $items = [];
+        $items = collect([]);
         if ($keranjang) {
             $items = KeranjangDetail::with('produk')->where('id_keranjang', $keranjang->id_keranjang)->get();
         }
