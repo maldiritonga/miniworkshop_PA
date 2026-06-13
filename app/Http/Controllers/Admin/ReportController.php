@@ -24,18 +24,11 @@ class ReportController extends Controller
             ->latest()
             ->get();
 
-        $totalPendapatan = $pesanan->sum(function ($p) {
-            return $p->detail->sum(function ($d) { return $d->harga * $d->qty; });
-        });
-        $totalOnline = $pesanan->where('tipe_pesanan', 'online')->sum(function ($p) {
-            return $p->detail->sum(function ($d) { return $d->harga * $d->qty; });
-        });
-        $totalOffline = $pesanan->where('tipe_pesanan', 'offline')->sum(function ($p) {
-            return $p->detail->sum(function ($d) { return $d->harga * $d->qty; });
-        });
+        $totalPendapatan = $pesanan->sum('total_harga');
+        $totalOnline = $pesanan->where('tipe_pesanan', 'online')->sum('total_harga');
+        $totalOffline = $pesanan->where('tipe_pesanan', 'offline')->sum('total_harga');
 
         $ringkasanHarian = DB::table('pesanan')
-            ->join('detail_pesanan', 'pesanan.id_pesanan', '=', 'detail_pesanan.id_pesanan')
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                       ->from('retur')
@@ -44,7 +37,7 @@ class ReportController extends Controller
             })
             ->select(
                 DB::raw('DATE(pesanan.tanggal_pesanan) as date'),
-                DB::raw('SUM(detail_pesanan.harga * detail_pesanan.qty) as total'),
+                DB::raw('SUM(pesanan.total_harga) as total'),
                 DB::raw('COUNT(DISTINCT pesanan.id_pesanan) as count')
             )
             ->where('pesanan.status_pesanan', 'selesai')
