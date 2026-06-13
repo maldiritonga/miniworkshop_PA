@@ -18,7 +18,7 @@ class ReportController extends Controller
         $pesanan = Pesanan::with(['user', 'pembayaran', 'detail'])
             ->where('status_pesanan', 'selesai')
             ->whereDoesntHave('retur', function ($q) {
-                $q->where('status_retur', '!=', 'ditolak');
+                $q->where('status_retur', 'selesai');
             })
             ->whereBetween('tanggal_pesanan', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
             ->latest()
@@ -40,7 +40,7 @@ class ReportController extends Controller
                 $query->select(DB::raw(1))
                       ->from('retur')
                       ->whereColumn('retur.id_pesanan', 'pesanan.id_pesanan')
-                      ->where('retur.status_retur', '!=', 'ditolak');
+                      ->where('retur.status_retur', 'selesai');
             })
             ->select(
                 DB::raw('DATE(pesanan.tanggal_pesanan) as date'),

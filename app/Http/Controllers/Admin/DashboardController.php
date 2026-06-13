@@ -30,6 +30,9 @@ class DashboardController extends Controller
 
         // 3. Pendapatan (Filtered)
         $pendapatan = Pesanan::where('status_pesanan', 'selesai')
+            ->whereDoesntHave('retur', function ($q) {
+                $q->where('status_retur', 'selesai');
+            })
             ->where('tanggal_pesanan', '>=', $startDate)
             ->sum('total_harga');
 
@@ -38,7 +41,11 @@ class DashboardController extends Controller
         $totalPesanan = (clone $pesananQuery)->count();
 
         // 5. Pesanan Sub-counts (Filtered)
-        $pesananSelesai = (clone $pesananQuery)->where('status_pesanan', 'selesai')->count();
+        $pesananSelesai = (clone $pesananQuery)->where('status_pesanan', 'selesai')
+            ->whereDoesntHave('retur', function ($q) {
+                $q->where('status_retur', 'selesai');
+            })
+            ->count();
         $pesananDibatalkan = (clone $pesananQuery)->where('status_pesanan', 'dibatalkan')->count();
         $pesananDiproses = (clone $pesananQuery)->whereIn('status_pesanan', ['menunggu_pembayaran', 'dikemas', 'dikirim', 'diantar', 'diretur'])->count();
 

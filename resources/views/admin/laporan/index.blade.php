@@ -1,5 +1,5 @@
 <x-admin-layout title="Laporan Keuangan">
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 no-print">
         <div>
             <h1 class="text-3xl font-black text-gray-900 uppercase tracking-tighter">Laporan Keuangan</h1>
             <p class="text-[13px] text-gray-500 font-medium mt-1">Pantau performa penjualan online dan offline toko Anda.</p>
@@ -7,6 +7,12 @@
         <button onclick="window.print()" class="px-6 py-3 bg-gray-900 text-white text-xs font-black rounded-2xl uppercase tracking-widest hover:bg-gray-800 transition shadow-lg no-print">
             Cetak Laporan
         </button>
+    </div>
+
+    <!-- Print Only Header -->
+    <div class="print-header hidden">
+        <h2>LAPORAN KEUANGAN MINI WORKSHOP</h2>
+        <p>Periode: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} - {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}</p>
     </div>
 
     <!-- Filters -->
@@ -100,9 +106,31 @@
     <style>
         @media print {
             .no-print { display: none !important; }
-            body { background: white; }
-            .shadow-sm, .shadow-xl { shadow: none !important; }
-            .rounded-[2.5rem] { border-radius: 1rem !important; }
+            body { background: white; margin: 0; padding: 0; }
+            .shadow-sm, .shadow-xl { box-shadow: none !important; }
+            .rounded-[2.5rem] { border-radius: 0 !important; }
+            .border-gray-100 { border-color: #000 !important; }
+            
+            /* Override admin layout fixed height & scroll for printing */
+            html, body { height: auto !important; overflow: visible !important; }
+            .h-screen { height: auto !important; }
+            .overflow-hidden { overflow: visible !important; }
+            .overflow-y-auto { overflow: visible !important; }
+            .overflow-x-auto { overflow: visible !important; }
+            main { display: block !important; flex: none !important; }
+            aside { display: none !important; } /* Hide sidebar completely just in case */
+            .flex-1 { flex: none !important; }
+
+            /* Table print behavior */
+            table { page-break-inside: auto; }
+            tr    { page-break-inside: avoid; page-break-after: auto; }
+            thead { display: table-header-group; }
+            tfoot { display: table-footer-group; }
+            
+            /* Print Header */
+            .print-header { display: block !important; margin-bottom: 20px; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; }
+            .print-header h2 { font-size: 24px; font-weight: bold; margin: 0; }
+            .print-header p { font-size: 14px; margin: 5px 0 0; }
         }
     </style>
 </x-admin-layout>
