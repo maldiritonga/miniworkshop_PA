@@ -27,6 +27,11 @@ class GoogleController extends Controller
                         ->first();
 
             if ($user) {
+                // Cek apakah akun diblokir
+                if ($user->is_blocked) {
+                    return redirect('/login')->withErrors(['email' => 'Akun Anda telah diblokir. Silakan hubungi admin untuk informasi lebih lanjut.']);
+                }
+
                 // Update google_id if it's missing (matched by email)
                 if (!$user->google_id) {
                     $user->update(['google_id' => $googleUser->id]);
