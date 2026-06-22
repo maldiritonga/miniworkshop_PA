@@ -186,7 +186,7 @@ class CheckoutController extends Controller
             'no_hp' => 'required|string',
             'alamat_pengiriman' => 'required|string',
             'metode_pembayaran' => 'required|string',
-            'bank_tujuan' => 'nullable|string|in:BRI,BNI,BCA',
+            'bank_tujuan' => 'nullable|string|in:Mandiri',
             'catatan' => 'nullable|string|max:500',
             'ongkir' => 'required|numeric',
             'kurir' => 'required|string|in:jne,sicepat,jnt',

@@ -520,9 +520,7 @@
                         <p class="text-sm font-semibold text-gray-600 mb-4">Pilih Bank Tujuan:</p>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             @foreach([
-                                'BRI' => ['color' => 'blue',   'no_rek' => '1234-5678-9012-3456', 'atas_nama' => 'Mini Workshop Store'],
-                                'BNI' => ['color' => 'orange', 'no_rek' => '9876-5432-1098-7654', 'atas_nama' => 'Mini Workshop Store'],
-                                'BCA' => ['color' => 'sky',    'no_rek' => '5555-1234-5678-9000', 'atas_nama' => 'Mini Workshop Store'],
+                                'Mandiri' => ['color' => 'blue', 'no_rek' => '1080017421927', 'atas_nama' => 'Fikri Fadillah'],
                             ] as $namaBank => $info)
                             <label class="cursor-pointer group" @click="bank = '{{ $namaBank }}'">
                                 <input type="radio" name="bank_tujuan" value="{{ $namaBank }}" x-model="bank" class="hidden">

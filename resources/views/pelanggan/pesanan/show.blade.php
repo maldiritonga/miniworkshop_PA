@@ -234,7 +234,7 @@
                                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                             <div>
                                                 <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Nama Bank *</label>
-                                                <input type="text" name="nama_bank" required placeholder="BCA / Mandiri / BRI" class="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-[12px] font-bold focus:ring-indigo-400 focus:border-indigo-400">
+                                                <input type="text" name="nama_bank" required placeholder="Mandiri" class="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-[12px] font-bold focus:ring-indigo-400 focus:border-indigo-400">
                                             </div>
                                             <div>
                                                 <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Nomor Rekening *</label>
@@ -478,9 +478,7 @@
                     @if($pesanan->pembayaran->metode_pembayaran === 'transfer_bank' && $pesanan->pembayaran->bank_tujuan)
                     @php
                         $rekeningInfo = [
-                            'BRI' => ['no_rek' => '1234-5678-9012-3456', 'atas_nama' => 'Mini Workshop Store'],
-                            'BNI' => ['no_rek' => '9876-5432-1098-7654', 'atas_nama' => 'Mini Workshop Store'],
-                            'BCA' => ['no_rek' => '5555-1234-5678-9000', 'atas_nama' => 'Mini Workshop Store'],
+                            'Mandiri' => ['no_rek' => '1080017421927', 'atas_nama' => 'Fikri Fadillah'],
                         ];
                         $rek = $rekeningInfo[$pesanan->pembayaran->bank_tujuan] ?? null;
                     @endphp
