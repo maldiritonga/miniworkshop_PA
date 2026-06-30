@@ -184,3 +184,5 @@ Route::get('/deploy/{action}/{token}', function ($action, $token) {
         return 'Error executing action "' . e($action) . '": ' . e($e->getMessage());
     }
 });
+
+Route::post('/webhooks/biteship', [\App\Http\Controllers\Api\WebhookController::class, 'biteship'])->name('webhook.biteship');

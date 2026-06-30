@@ -27,6 +27,7 @@ class Pesanan extends Model
         'kurir',
         'resi',
         'biteship_order_id',
+        'pesanan_diantar_at',
     ];
 
     protected function casts(): array
@@ -34,6 +35,7 @@ class Pesanan extends Model
         return [
             'tanggal_pesanan' => 'datetime',
             'batas_pembayaran_at' => 'datetime',
+            'pesanan_diantar_at' => 'datetime',
         ];
     }
 
