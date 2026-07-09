@@ -500,8 +500,8 @@
                     @if($pesanan->pembayaran->metode_pembayaran === 'qris')
                     <div class="mt-4 flex flex-col items-center p-4 bg-gray-50 rounded-2xl">
                         <div class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Scan QRIS</div>
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=MiniWorkshopQRIS2026&bgcolor=ffffff&color=000000&margin=10"
-                            alt="QRIS" class="w-36 h-36 rounded-xl">
+                        <img src="{{ asset('images/QrisStatisMiniworkshop.png') }}"
+                            alt="QRIS" class="w-36 h-36 rounded-xl object-contain">
                         <div class="text-xs text-gray-400 mt-2 text-center">Bayar sebesar<br><span class="font-black text-gray-900">Rp {{ number_format($pesanan->total_harga, 0, ',', '.') }}</span></div>
                     </div>
                     @endif
