@@ -2,8 +2,8 @@
 
 @php
 $classes = ($active ?? false)
-            ? 'flex items-center gap-4 w-full px-4 py-3.5 text-[14px] font-bold text-gray-900 bg-gray-100 rounded-xl transition group'
-            : 'flex items-center gap-4 w-full px-4 py-3.5 text-[14px] font-bold text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition group';
+            ? 'flex items-center gap-4 w-full px-4 py-3.5 text-lg font-black text-gray-900 bg-gray-100 rounded-xl transition group'
+            : 'flex items-center gap-4 w-full px-4 py-3.5 text-lg font-black text-gray-500 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition group';
 
 $iconClasses = ($active ?? false) ? 'h-5 w-5 text-gray-900' : 'h-5 w-5 text-gray-400 group-hover:text-gray-900';
 @endphp

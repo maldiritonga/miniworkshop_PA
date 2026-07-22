@@ -26,24 +26,26 @@
         </div>
 
         <!-- Password -->
-        <div>
+        <div x-data="{ show: false }">
             <div class="flex justify-between items-center mb-2">
                 <label for="password" class="block text-sm font-bold text-gray-800">Password</label>
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="text-xs font-bold text-orange-600 hover:underline">Lupa Password?</a>
                 @endif
             </div>
-            <input id="password" type="password" name="password" required autocomplete="current-password"
-                placeholder="Masukkan password Anda"
-                class="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none" />
+            <div class="relative">
+                <input id="password" :type="show ? 'text' : 'password'" name="password" required autocomplete="current-password"
+                    placeholder="Masukkan password Anda"
+                    class="w-full px-6 py-4 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none" />
+            </div>
+            <div class="flex items-center mt-3">
+                <input id="show_password" type="checkbox" x-model="show" class="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                <label for="show_password" class="ml-3 text-sm font-medium text-gray-600">Tampilkan Password</label>
+            </div>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="flex items-center">
-            <input id="remember_me" type="checkbox" name="remember" class="w-5 h-5 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
-            <label for="remember_me" class="ml-3 text-sm font-medium text-gray-600">Ingat saya</label>
-        </div>
+
 
         <div class="pt-2">
             <button type="submit" class="w-full py-4 bg-[#FF5722] hover:bg-[#E64A19] text-white font-extrabold rounded-2xl shadow-lg shadow-orange-200 transition-all active:scale-[0.98]">

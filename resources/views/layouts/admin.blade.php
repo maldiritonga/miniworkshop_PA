@@ -62,11 +62,11 @@
                     </div>
 
                     <x-admin-nav-link href="{{ route('admin.akun-kasir.index') }}" :active="request()->routeIs('admin.akun-kasir.*')" icon="settings">
-                        mengelola akun kasir
+                        Kelola Akun Staff
                     </x-admin-nav-link>
 
                     <x-admin-nav-link href="{{ route('admin.akun-pelanggan.index') }}" :active="request()->routeIs('admin.akun-pelanggan.*')" icon="user-group">
-                        mengelola akun pelanggan
+                        Kelola Akun Pelanggan
                     </x-admin-nav-link>
                     @endif
                 </nav>

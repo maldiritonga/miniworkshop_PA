@@ -21,7 +21,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="nama_produk" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Nama Produk</label>
-                        <input type="text" name="nama_produk" id="nama_produk" required value="{{ old('nama_produk') }}"
+                        <input type="text" name="nama_produk" id="nama_produk" required value="{{ old('nama_produk', isset($duplicateProduk) ? $duplicateProduk->nama_produk : '') }}"
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900 placeholder-gray-400"
                                placeholder="Nama produk">
                         <x-input-error :messages="$errors->get('nama_produk')" class="mt-2" />
@@ -33,7 +33,7 @@
                                 class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900">
                             <option value="" disabled selected>Pilih Kategori</option>
                             @foreach($kategori as $kat)
-                                <option value="{{ $kat->id_kategori }}" {{ old('id_kategori') == $kat->id_kategori ? 'selected' : '' }}>
+                                <option value="{{ $kat->id_kategori }}" {{ old('id_kategori', isset($duplicateProduk) ? $duplicateProduk->id_kategori : '') == $kat->id_kategori ? 'selected' : '' }}>
                                     {{ $kat->nama_kategori }}
                                 </option>
                             @endforeach
@@ -46,7 +46,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="harga" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Harga (Rp)</label>
-                        <input type="number" name="harga" id="harga" required value="{{ old('harga') }}"
+                        <input type="number" name="harga" id="harga" required value="{{ old('harga', isset($duplicateProduk) ? $duplicateProduk->harga : '') }}"
                                class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900 placeholder-gray-400"
                                placeholder="150000">
                         <x-input-error :messages="$errors->get('harga')" class="mt-2" />
@@ -76,7 +76,7 @@
                         <label for="deskripsi" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Deskripsi</label>
                         <textarea name="deskripsi" id="deskripsi" rows="4"
                                   class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900 placeholder-gray-400"
-                                  placeholder="Deskripsi singkat...">{{ old('deskripsi') }}</textarea>
+                                  placeholder="Deskripsi singkat...">{{ old('deskripsi', isset($duplicateProduk) ? $duplicateProduk->deskripsi : '') }}</textarea>
                         <x-input-error :messages="$errors->get('deskripsi')" class="mt-2" />
                     </div>
                 </div>
@@ -157,5 +157,17 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        // Initialize size if category is already selected (e.g. on validation error or duplicate)
+        window.onload = function() {
+            let catId = "{{ old('id_kategori', isset($duplicateProduk) ? $duplicateProduk->id_kategori : '') }}";
+            if (catId) {
+                updateSizeOptions(catId);
+                let sizeVal = "{{ old('size', isset($duplicateProduk) ? $duplicateProduk->size : '') }}";
+                if (sizeVal) {
+                    document.getElementById('size').value = sizeVal;
+                }
+            }
+        };
     </script>
 </x-admin-layout>

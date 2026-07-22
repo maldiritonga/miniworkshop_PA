@@ -7,9 +7,9 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fafafa; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fafafa; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
@@ -23,8 +23,11 @@
                 <h1 class="text-lg font-black uppercase tracking-tighter text-gray-900">MINI WORKSHOP</h1>
             </a>
             <div class="flex items-center gap-4 md:gap-10 text-[13px] font-bold text-gray-800">
-                <a href="{{ route('home') }}" class="hover:text-yellow-600 transition">Dashboard</a>
-                <a href="{{ route('pesanan.saya') }}" class="text-yellow-600">Pesanan</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Dasboard</a>
+                <a href="{{ route('home') }}#catalog" class="hover:text-yellow-600 transition">katalog</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">About</a>
+                <a href="{{ route('pesanan.saya') }}" class="{{ request()->routeIs('pesanan.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Pesanan</a>
+                <a href="{{ route('retur.saya') }}" class="{{ request()->routeIs('retur.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Retur</a>                                
             </div>
             <div class="flex items-center gap-3 md:gap-6">
                 @include('layouts.help-modal')
@@ -49,49 +52,10 @@
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-6 md:px-12 py-12" x-data="{ uploadOpen: false, returOpen: false, returProdukId: '', returProdukNama: '' }">
+    <main class="max-w-7xl mx-auto px-6 md:px-12 py-12" x-data="{ uploadOpen: false }">
 
-        {{-- Notifikasi retur hanya untuk pesanan ini --}}
-        @auth
-        @php
-            $notifsPesanan = Auth::user()->unreadNotifications->filter(
-                fn ($notif) => isset($notif->data['id_pesanan'])
-                    && (int) $notif->data['id_pesanan'] === (int) $pesanan->id_pesanan
-            );
-        @endphp
-        @if($notifsPesanan->isNotEmpty())
-        <div class="mb-6 space-y-3">
-            @foreach($notifsPesanan as $notif)
-            <div class="flex items-start gap-4 bg-indigo-50 border border-indigo-100 rounded-2xl px-5 py-4">
-                <div class="shrink-0 w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="text-[12px] font-black text-indigo-700 uppercase tracking-widest mb-0.5">{{ $notif->data['judul'] ?? 'Notifikasi' }}</div>
-                    <p class="text-[12px] text-gray-700 leading-relaxed">{{ $notif->data['pesan'] ?? '' }}</p>
-                    @if(isset($notif->data['id_produk']))
-                    <a href="#retur-produk-{{ $notif->data['id_produk'] }}"
-                        class="inline-flex items-center gap-1.5 mt-2 px-3 py-1.5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition">
-                        Lihat Produk Retur
-                    </a>
-                    @endif
-                </div>
-                <form action="{{ route('notifikasi.baca', $notif->id) }}" method="POST" class="shrink-0">
-                    @csrf
-                    <button type="submit" class="text-indigo-300 hover:text-indigo-600 transition" title="Tandai sudah dibaca">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
-            @endforeach
-        </div>
-        @endif
-        @endauth
-        <a href="{{ route('pesanan.saya') }}" class="inline-flex items-center gap-2 text-[11px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition mb-6">
+
+        <a href="{{ route('pesanan.saya') }}" class="inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-yellow-600 transition mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -145,10 +109,10 @@
         </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             {{-- Kiri: Produk & Info --}}
-            <div class="lg:col-span-2 space-y-6">
+            <div class="md:col-span-2 space-y-6">
 
                 {{-- Konfirmasi Penerimaan --}}
                 @if($pesanan->status_pesanan === 'diantar')
@@ -186,11 +150,9 @@
                         @php
                             $returItem = $pesanan->retur->firstWhere('id_produk', $item->id_produk);
                             $sudahRetur = $returItem !== null;
-                            $isReturExpired = $pesanan->updated_at->copy()->addDays(7)->isPast();
-                            $bisaAjukanRetur = in_array($pesanan->status_pesanan, ['selesai', 'diretur'], true) && ! $sudahRetur && ! $isReturExpired;
                             $returBadge = $returItem ? \App\Models\Retur::statusBadge($returItem->status_retur) : null;
                         @endphp
-                        <div id="retur-produk-{{ $item->id_produk }}" class="rounded-2xl {{ $returItem?->canPrintLabel() ? 'ring-2 ring-indigo-200 bg-indigo-50/40 p-4 -mx-1' : '' }}">
+                        <div class="rounded-2xl {{ $returItem?->canPrintLabel() ? 'ring-2 ring-indigo-200 bg-indigo-50/40 p-4 -mx-1' : '' }}">
                             <div class="flex items-center gap-4">
                                 <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-100 shrink-0">
                                     @if($item->produk->gambar_url)
@@ -205,106 +167,13 @@
                                     <div class="text-sm font-black text-gray-900">Rp {{ number_format($item->harga * $item->qty, 0, ',', '.') }}</div>
                                     @if($sudahRetur && $returBadge)
                                         <div class="flex flex-col items-end gap-1">
-                                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest whitespace-nowrap {{ $returBadge['class'] }}">
-                                                {{ $returBadge['label'] }}
-                                            </span>
-                                            @if($returItem->status_retur === 'ditolak' && $returItem->alasan_penolakan)
-                                            <span class="text-[9px] text-red-400 max-w-[120px] text-right leading-tight" title="{{ $returItem->alasan_penolakan }}">
-                                                {{ Str::limit($returItem->alasan_penolakan, 40) }}
-                                            </span>
-                                            @endif
+                                            <a href="{{ route('retur.show', $returItem->id_retur) }}" class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest whitespace-nowrap {{ $returBadge['class'] }} hover:opacity-80 transition">
+                                                Detail Retur
+                                            </a>
                                         </div>
-                                    @elseif($bisaAjukanRetur)
-                                        <button
-                                            @click="returOpen = true; returProdukId = '{{ $item->id_produk }}'; returProdukNama = '{{ addslashes($item->produk->nama_produk) }}'"
-                                            class="px-3 py-1.5 bg-red-50 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-white transition whitespace-nowrap">
-                                            Retur
-                                        </button>
                                     @endif
                                 </div>
                             </div>
-
-                            @if($returItem)
-                                @if($returItem->status_retur === 'menunggu_rekening')
-                                <div class="mt-4 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
-                                    <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Menunggu Rekening Anda</p>
-                                    <p class="text-xs text-gray-600 mb-3">Admin telah menyetujui retur ini. Silakan masukkan nomor rekening Anda untuk pengembalian dana.</p>
-                                    <form action="{{ route('retur.kirim-rekening', [$pesanan->id_pesanan, $returItem->id_retur]) }}" method="POST" class="space-y-3">
-                                        @csrf
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                            <div>
-                                                <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Nama Bank *</label>
-                                                <input type="text" name="nama_bank" required placeholder="Mandiri" class="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-[12px] font-bold focus:ring-indigo-400 focus:border-indigo-400">
-                                            </div>
-                                            <div>
-                                                <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Nomor Rekening *</label>
-                                                <input type="text" name="no_rekening" required placeholder="0123456789" class="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-[12px] font-bold focus:ring-indigo-400 focus:border-indigo-400">
-                                            </div>
-                                            <div>
-                                                <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Atas Nama *</label>
-                                                <input type="text" name="nama_pemilik_rekening" required placeholder="Nama pemilik" class="w-full bg-white border border-gray-200 rounded-xl p-2.5 text-[12px] font-bold focus:ring-indigo-400 focus:border-indigo-400">
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="w-full mt-2 py-2.5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-indigo-700 transition">Kirim Data Rekening</button>
-                                    </form>
-                                </div>
-                                @endif
-
-                                @if($returItem->status_retur === 'menunggu_barang')
-                                <div class="mt-4 p-4 bg-purple-50 border border-purple-100 rounded-xl">
-                                    <p class="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-1">Kirim Barang Retur</p>
-                                    <p class="text-xs text-gray-600 mb-2">
-                                        Terima kasih, data rekening Anda sudah tersimpan. Selanjutnya, <strong>silakan lakukan pengiriman barang retur</strong> ke alamat toko kami.
-                                    </p>
-                                    <p class="text-xs text-gray-600">
-                                        Jangan lupa mencetak label pengiriman di bawah ini dan menempelkannya pada paket Anda.
-                                    </p>
-                                </div>
-                                @endif
-
-                                @if($returItem->status_retur === 'menunggu_transfer')
-                                <div class="mt-4 p-4 bg-orange-50 border border-orange-100 rounded-xl">
-                                    <p class="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-1">Barang Telah Diterima Toko</p>
-                                    <p class="text-xs text-gray-600">
-                                        Toko telah menerima barang retur Anda. Saat ini Admin sedang memproses transfer pengembalian dana ke rekening Anda. Mohon ditunggu ya!
-                                    </p>
-                                </div>
-                                @endif
-
-                                @if($returItem->canPrintLabel())
-                                <div class="mt-4 p-4 bg-white border border-indigo-100 rounded-xl">
-                                    <p class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-1">Label Pengiriman Retur</p>
-                                    <p class="text-xs text-gray-600 mb-3">
-                                        Cetak label untuk produk <strong>{{ $item->produk->nama_produk }}</strong>@if($item->produk->size) ({{ $item->produk->size }})@endif — tempelkan pada paket retur dan kirim ke toko.
-                                    </p>
-                                    <a href="{{ route('pesanan.label-retur', [$pesanan->id_pesanan, $returItem->id_retur]) }}" target="_blank"
-                                        class="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-gray-700 transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                                        </svg>
-                                        Cetak Label — {{ $item->produk->nama_produk }}
-                                    </a>
-                                </div>
-                                @endif
-
-                                @if($returItem->status_retur === 'uang_ditransfer')
-                                <div class="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl">
-                                    <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Dana Telah Ditransfer</p>
-                                    <p class="text-xs text-gray-600 mb-3">Admin telah mentransfer dana ke rekening Anda. Silakan cek saldo Anda dan konfirmasi jika sudah masuk.</p>
-                                    
-                                    @if($returItem->bukti_transfer)
-                                    <a href="{{ asset('images/bukti_transfer/' . $returItem->bukti_transfer) }}" target="_blank" class="inline-block mb-4">
-                                        <img src="{{ asset('images/bukti_transfer/' . $returItem->bukti_transfer) }}" class="h-16 rounded-lg border border-gray-200">
-                                    </a>
-                                    @endif
-
-                                    <form action="{{ route('retur.konfirmasi-selesai', [$pesanan->id_pesanan, $returItem->id_retur]) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" onclick="return confirm('Konfirmasi bahwa dana sudah Anda terima?')" class="w-full py-2.5 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-700 transition">Dana Sudah Diterima</button>
-                                    </form>
-                                </div>
-                                @endif
-                            @endif
                         </div>
                         @endforeach
                     </div>
@@ -320,11 +189,6 @@
                     <p class="text-sm text-gray-700 leading-relaxed">{{ $pesanan->alamat_pengiriman }}</p>
                     <div class="text-[11px] text-gray-400 mt-1">No. HP: {{ $pesanan->no_hp }}</div>
                 </div>
-
-            </div>
-
-            {{-- Kanan: Status & Pembayaran --}}
-            <div class="lg:col-span-1 space-y-6">
 
                 {{-- Info Pengiriman (Biteship) --}}
                 @if($pesanan->resi && $pesanan->kurir)
@@ -389,6 +253,11 @@
                     </div>
                 </div>
                 @endif
+
+            </div>
+
+            {{-- Kanan: Status & Pembayaran --}}
+            <div class="md:col-span-1 space-y-6">
 
                 {{-- Status Pesanan --}}
                 <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
@@ -601,103 +470,6 @@
             </div>
         </div>
 
-        {{-- Modal Retur --}}
-        <div x-show="returOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div @click.away="returOpen = false" class="bg-white rounded-[2rem] p-8 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
-                <h3 class="text-lg font-black text-gray-900 mb-1">Ajukan Retur Produk</h3>
-                <p class="text-xs text-gray-400 mb-1">Produk: <span class="font-bold text-gray-900" x-text="returProdukNama"></span></p>
-                <p class="text-xs text-gray-400 mb-6">Jelaskan alasan dan sertakan foto bukti kondisi produk.</p>
-
-                <form action="{{ route('retur.store', $pesanan->id_pesanan) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
-                    @csrf
-                    <input type="hidden" name="id_produk" x-bind:value="returProdukId">
-
-                    {{-- Alasan Retur --}}
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Alasan Retur <span class="text-red-500">*</span></label>
-                        <textarea name="alasan_retur" rows="3" required maxlength="500"
-                            class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-red-400 focus:border-transparent resize-none"
-                            placeholder="Contoh: Produk tidak sesuai deskripsi, ukuran tidak pas, cacat produk, dll."></textarea>
-                        <p class="text-[10px] text-gray-400 mt-1">Maksimal 500 karakter</p>
-                    </div>
-
-                    {{-- Upload Foto Bukti --}}
-                    <div x-data="{
-                        previews: [],
-                        files: [],
-                        addFiles(event) {
-                            const newFiles = Array.from(event.target.files);
-                            const total = this.files.length + newFiles.length;
-                            if (total > 3) {
-                                alert('Maksimal 3 foto yang dapat diunggah.');
-                                event.target.value = '';
-                                return;
-                            }
-                            newFiles.forEach(file => {
-                                this.files.push(file);
-                                const reader = new FileReader();
-                                reader.onload = e => this.previews.push(e.target.result);
-                                reader.readAsDataURL(file);
-                            });
-                            event.target.value = '';
-                        },
-                        removeFile(index) {
-                            this.files.splice(index, 1);
-                            this.previews.splice(index, 1);
-                        }
-                    }" x-init="
-                        $watch('files', value => {
-                            const dt = new DataTransfer();
-                            value.forEach(f => dt.items.add(f));
-                            $refs.fileInput.files = dt.files;
-                        })
-                    ">
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-2">
-                            Foto Bukti <span class="text-red-500">*</span>
-                            <span class="normal-case font-normal text-gray-400 ml-1">(min. 1, maks. 3 foto · JPG/PNG · maks. 2MB/foto)</span>
-                        </label>
-
-                        {{-- Preview Grid --}}
-                        <div class="grid grid-cols-3 gap-3 mb-3" x-show="previews.length > 0">
-                            <template x-for="(src, i) in previews" :key="i">
-                                <div class="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 border border-gray-200">
-                                    <img :src="src" class="w-full h-full object-cover">
-                                    <button type="button" @click="removeFile(i)"
-                                        class="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs font-black hover:bg-red-600 transition shadow">
-                                        ✕
-                                    </button>
-                                </div>
-                            </template>
-                        </div>
-
-                        {{-- Tombol Tambah Foto --}}
-                        <label x-show="previews.length < 3"
-                            class="flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:border-red-400 hover:bg-red-50 transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
-                            <span class="text-xs font-bold text-gray-400" x-text="previews.length === 0 ? 'Tambah Foto Bukti' : 'Tambah Foto Lagi'"></span>
-                            <input type="file" name="foto_bukti[]" accept="image/*" multiple class="hidden"
-                                x-ref="fileInput"
-                                @change="addFiles($event)">
-                        </label>
-
-                        <p class="text-[10px] text-gray-400 mt-1.5" x-text="previews.length + '/3 foto dipilih'"></p>
-                    </div>
-
-                    <div class="flex gap-3 pt-2">
-                        <button type="button" @click="returOpen = false"
-                            class="flex-1 py-3 bg-gray-100 text-gray-500 text-xs font-black rounded-2xl uppercase tracking-widest hover:bg-gray-200 transition">
-                            Batal
-                        </button>
-                        <button type="submit"
-                            class="flex-1 py-3 bg-red-500 text-white text-xs font-black rounded-2xl uppercase tracking-widest hover:bg-red-600 transition shadow-sm">
-                            Ajukan Retur
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </main>
 
     @include('layouts.footer')

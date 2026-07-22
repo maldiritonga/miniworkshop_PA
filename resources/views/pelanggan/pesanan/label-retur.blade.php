@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Label Retur {{ $retur->produk->nama_produk }} — RTR-{{ str_pad($retur->id_retur, 5, '0', STR_PAD_LEFT) }}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f0f0f0; color: #000; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f0f0; color: #000; }
 
         .toolbar {
             background: #fff;
@@ -63,7 +63,7 @@
             justify-content: space-between;
             background: #f9f9f9;
         }
-        .order-block .order-no { font-size: 18px; font-weight: 900; letter-spacing: .08em; font-family: 'Courier New', monospace; color: #000; }
+        .order-block .order-no { font-size: 18px; font-weight: 900; letter-spacing: .08em; font-family: 'Plus Jakarta Sans', sans-serif; color: #000; }
         .order-block .order-label { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #888; margin-bottom: 2px; }
         .order-block .sub-no { font-size: 10px; font-weight: 700; color: #555; margin-top: 2px; }
         .fake-barcode { display: flex; align-items: flex-end; gap: 1.5px; height: 36px; }

@@ -1,8 +1,21 @@
-<x-admin-layout title="Mengelola Pesanan">
+<x-admin-layout title="Kelola Pesanan">
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
-            <h1 class="text-3xl font-black text-gray-900 uppercase tracking-tighter">Mengelola Pesanan</h1>
-            <p class="text-[13px] text-gray-500 font-medium mt-1">Pantau dan kelola semua pesanan pelanggan di sini.</p>
+            <h1 class="text-3xl font-black text-gray-900 uppercase tracking-tighter">Kelola Pesanan</h1>
+            <p class="text-[15px] text-gray-500 font-medium mt-1">Pantau dan kelola semua pesanan pelanggan di sini.</p>
+        </div>
+        <div>
+            <form method="GET" action="{{ route('admin.pesanan.index') }}" id="filterForm">
+                <select name="status" onchange="document.getElementById('filterForm').submit()" class="bg-white border border-gray-200 rounded-2xl px-9 py-3.5 text-xs font-black uppercase tracking-widest text-gray-900 focus:ring-2 focus:ring-blue-600 transition cursor-pointer">
+                    <option value="">Semua Status</option>
+                    <option value="menunggu_pembayaran" {{ request('status') === 'menunggu_pembayaran' ? 'selected' : '' }}>Menunggu Pembayaran</option>
+                    <option value="dikemas" {{ request('status') === 'dikemas' ? 'selected' : '' }}>Dikemas</option>
+                    <option value="dikirim" {{ request('status') === 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                    <option value="diantar" {{ request('status') === 'diantar' ? 'selected' : '' }}>Diantar</option>
+                    <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    <option value="dibatalkan" {{ request('status') === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                </select>
+            </form>
         </div>
     </div>
 
@@ -13,43 +26,43 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-gray-50/50 border-b border-gray-100">
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">ID Pesanan</th>
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">Pelanggan</th>
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">Tanggal</th>
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">Total</th>
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">Tipe</th>
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">Status</th>
-                        <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">Aksi</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">ID Pesanan</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Pelanggan</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Tanggal</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Total</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Tipe</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($pesanan as $order)
                     <tr class="hover:bg-gray-50/50 transition">
                         <td class="px-8 py-5">
-                            <span class="font-bold text-gray-900 text-[13px]">#{{ $order->id_pesanan }}</span>
+                            <span class="font-bold text-gray-900 text-[15px]">#{{ $order->id_pesanan }}</span>
                         </td>
                         <td class="px-8 py-5">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-[10px] font-black">
+                                <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 text-[11px] font-black">
                                     {{ strtoupper(substr($order->user->nama ?? 'G', 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div class="text-[13px] font-bold text-gray-900">{{ $order->user->nama ?? 'Guest' }}</div>
-                                    <div class="text-[10px] text-gray-400">{{ $order->user->email ?? 'Walking Customer' }}</div>
+                                    <div class="text-[15px] font-bold text-gray-900">{{ $order->user->nama ?? 'Guest' }}</div>
+                                    <div class="text-[12px] text-gray-400">{{ $order->user->email ?? 'Walking Customer' }}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-8 py-5">
-                            <span class="text-[13px] text-gray-600 font-medium">{{ $order->tanggal_pesanan }}</span>
+                            <span class="text-[14px] text-gray-600 font-medium">{{ $order->tanggal_pesanan }}</span>
                         </td>
                         <td class="px-8 py-5">
-                            <span class="text-[13px] font-bold text-gray-900">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</span>
+                            <span class="text-[15px] font-bold text-gray-900">Rp {{ number_format($order->total_harga, 0, ',', '.') }}</span>
                         </td>
                         <td class="px-8 py-5">
                             @if($order->tipe_pesanan == 'offline')
-                                <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[9px] font-black uppercase tracking-widest">Offline</span>
+                                <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-[10px] font-black uppercase tracking-widest">Offline</span>
                             @else
-                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[9px] font-black uppercase tracking-widest">Online</span>
+                                <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest">Online</span>
                             @endif
                         </td>
                         <td class="px-8 py-5">
@@ -63,7 +76,7 @@
                                     'dibatalkan' => 'bg-red-50 text-red-600',
                                 ][$order->status_pesanan] ?? 'bg-gray-50 text-gray-600';
                             @endphp
-                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {{ $statusClass }}">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest {{ $statusClass }}">
                                 {{ str_replace('_', ' ', $order->status_pesanan) }}
                             </span>
                         </td>

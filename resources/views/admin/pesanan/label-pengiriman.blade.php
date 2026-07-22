@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Label Pengiriman #{{ str_pad($pesanan->id_pesanan, 6, '0', STR_PAD_LEFT) }}</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f0f0f0; color: #000; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f0f0; color: #000; }
 
         /* ── Toolbar (screen only) ── */
         .toolbar {
@@ -77,7 +77,7 @@
             font-size: 20px;
             font-weight: 900;
             letter-spacing: .08em;
-            font-family: 'Courier New', monospace;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             color: #000;
         }        .order-block .order-label {
             font-size: 8px;

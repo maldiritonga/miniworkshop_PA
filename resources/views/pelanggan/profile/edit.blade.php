@@ -7,9 +7,9 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fafafa; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fafafa; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
@@ -23,9 +23,11 @@
                 <h1 class="text-lg font-black uppercase tracking-tighter text-gray-900">MINI WORKSHOP</h1>
             </a>
             <div class="flex items-center gap-4 md:gap-10 text-[13px] font-bold text-gray-800">
-                <a href="{{ route('home') }}" class="hover:text-yellow-600 transition">Beranda</a>
-                <a href="{{ route('pesanan.saya') }}" class="hover:text-yellow-600 transition">Pesanan</a>
-                <a href="{{ route('profile.edit') }}" class="text-yellow-600">Profil</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Dasboard</a>
+                <a href="{{ route('home') }}#catalog" class="hover:text-yellow-600 transition">katalog</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">About</a>
+                <a href="{{ route('pesanan.saya') }}" class="{{ request()->routeIs('pesanan.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Pesanan</a>
+                <a href="{{ route('retur.saya') }}" class="{{ request()->routeIs('retur.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Retur</a>                                
             </div>
             <div class="flex items-center gap-3 md:gap-6">
                 @include('layouts.help-modal')
@@ -50,7 +52,7 @@
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto px-6 md:px-12 py-12" x-data="{
+    <main class="max-w-7xl mx-auto px-6 md:px-12 py-12" x-data="{
         modalAlamat: false,
         modalEdit: false,
         editId: null,
@@ -186,7 +188,7 @@
         </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
 
             {{-- Kiri: Info Akun --}}
             <div class="lg:col-span-1 space-y-6">
@@ -257,6 +259,10 @@
                     </form>
                 </div>
 
+            </div>
+
+            {{-- Tengah: Info Akun & Password --}}
+            <div class="lg:col-span-1 space-y-6">
                 {{-- Update Info Akun --}}
                 <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
                     <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-5">Informasi Akun</h3>
@@ -289,7 +295,10 @@
                         </button>
                     </form>
                 </div>
+            </div>
 
+            {{-- Tengah Kanan: Ganti Password --}}
+            <div class="lg:col-span-1">
                 {{-- Ganti Password --}}
                 <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100">
                     <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-5">Ganti Password</h3>

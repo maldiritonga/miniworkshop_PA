@@ -1,5 +1,5 @@
 <x-admin-layout>
-    <x-slot name="title">Kelola Akun Kasir</x-slot>
+    <x-slot name="title">Kelola Akun Staff</x-slot>
 
     <div class="space-y-6">
         <!-- Breadcrumbs -->
@@ -11,14 +11,14 @@
 
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Kelola Akun Kasir</h1>
-                <p class="text-gray-500 mt-1">Daftar staf kasir yang dapat mengakses sistem</p>
+                <h1 class="text-3xl font-bold text-gray-900">Kelola Akun Staff</h1>
+                <p class="text-gray-500 mt-1">Daftar staf kasir dan admin yang dapat mengakses sistem</p>
             </div>
             <a href="{{ route('admin.akun-kasir.create') }}" class="w-fit flex items-center gap-2 px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-2xl hover:bg-yellow-500 transition shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Tambah Kasir Baru
+                Tambah Staff Baru
             </a>
         </div>
 
@@ -35,9 +35,10 @@
                     <thead class="bg-gray-50 border-b border-gray-100">
                         <tr>
                             <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">NO</th>
-                            <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">NAMA KASIR</th>
+                            <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">NAMA</th>
                             <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">EMAIL</th>
                             <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">NO HP</th>
+                            <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">TIPE AKUN</th>
                             <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">TANGGAL BERGABUNG</th>
                             <th class="px-8 py-5 text-[11px] font-black text-gray-400 uppercase tracking-widest">AKSI</th>
                         </tr>
@@ -56,6 +57,11 @@
                             </td>
                             <td class="px-8 py-6 text-sm text-gray-600 font-medium">{{ $item->email }}</td>
                             <td class="px-8 py-6 text-sm text-gray-600 font-medium">{{ $item->no_hp }}</td>
+                            <td class="px-8 py-6">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-gray-100 text-gray-700">
+                                    {{ $item->role === 'admin' ? 'Super Admin' : 'Kasir' }}
+                                </span>
+                            </td>
                             <td class="px-8 py-6 text-sm font-bold text-gray-400">
                                 {{ $item->created_at->format('d M Y') }}
                             </td>
@@ -65,7 +71,7 @@
                                        class="px-4 py-2 bg-yellow-100 text-yellow-700 text-xs font-black rounded-xl hover:bg-yellow-400 hover:text-white transition uppercase tracking-widest">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.akun-kasir.destroy', $item->id_user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun kasir ini?')">
+                                    <form action="{{ route('admin.akun-kasir.destroy', $item->id_user) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus akun staff ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" 
@@ -78,8 +84,8 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="px-8 py-20 text-center text-gray-400 font-bold">
-                                Belum ada akun kasir. <a href="{{ route('admin.akun-kasir.create') }}" class="text-yellow-600 underline">Tambah baru sekarang.</a>
+                            <td colspan="7" class="px-8 py-20 text-center text-gray-400 font-bold">
+                                Belum ada akun staff. <a href="{{ route('admin.akun-kasir.create') }}" class="text-yellow-600 underline">Tambah baru sekarang.</a>
                             </td>
                         </tr>
                         @endforelse

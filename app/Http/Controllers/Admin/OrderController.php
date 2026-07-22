@@ -16,11 +16,17 @@ class OrderController extends Controller
         private BiteshipService $biteshipService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $this->pesananService->cancelAllExpired();
 
-        $pesanan = Pesanan::with(['user', 'pembayaran'])->latest()->paginate(10);
+        $query = Pesanan::with(['user', 'pembayaran'])->latest();
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status_pesanan', $request->status);
+        }
+
+        $pesanan = $query->paginate(10)->withQueryString();
         return view('admin.pesanan.index', compact('pesanan'));
     }
 

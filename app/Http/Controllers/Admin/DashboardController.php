@@ -66,11 +66,54 @@ class DashboardController extends Controller
         $totalStokGabungan = Produk::aktif()->sum('stok');
         $isTotalStokRendah = $totalStokGabungan < Produk::STOK_BATAS_RENDAH;
 
+        // Chart Data (Dinamis berdasarkan filter, hitung produk terjual)
+        if ($filter === 'today') {
+            $chartDates = collect(range(23, 0))->map(fn($hours) => now()->subHours($hours)->startOfHour());
+            $chartLabels = $chartDates->map(fn($date) => $date->format('H:i'));
+            $chartTitle = 'Grafik Produk Terjual (Hari Ini)';
+        } elseif ($filter === 'week') {
+            $chartDates = collect(range(6, 0))->map(fn($days) => now()->subDays($days)->startOfDay());
+            $chartLabels = $chartDates->map(fn($date) => $date->translatedFormat('d M'));
+            $chartTitle = 'Grafik Produk Terjual (Minggu Ini)';
+        } elseif ($filter === 'month') {
+            $chartDates = collect(range(29, 0))->map(fn($days) => now()->subDays($days)->startOfDay());
+            $chartLabels = $chartDates->map(fn($date) => $date->translatedFormat('d M'));
+            $chartTitle = 'Grafik Produk Terjual (Bulan Ini)';
+        } else {
+            $chartDates = collect(range(11, 0))->map(fn($months) => now()->subMonths($months)->startOfMonth());
+            $chartLabels = $chartDates->map(fn($date) => $date->translatedFormat('M Y'));
+            $chartTitle = 'Grafik Produk Terjual (Tahun Ini)';
+        }
+
+        $chartData = $chartDates->map(function ($date) use ($filter) {
+            $query = \App\Models\DetailPesanan::whereHas('pesanan', function ($q) {
+                $q->where('status_pesanan', 'selesai')
+                  ->whereDoesntHave('retur', function ($q2) {
+                      $q2->where('status_retur', 'selesai');
+                  });
+            });
+
+            if ($filter === 'today') {
+                $end = $date->copy()->endOfHour();
+                $query->whereHas('pesanan', fn($q) => $q->whereBetween('tanggal_pesanan', [$date, $end]));
+            } elseif ($filter === 'year') {
+                $end = $date->copy()->endOfMonth();
+                $query->whereHas('pesanan', fn($q) => $q->whereBetween('tanggal_pesanan', [$date, $end]));
+            } else {
+                $query->whereHas('pesanan', fn($q) => $q->whereDate('tanggal_pesanan', $date));
+            }
+
+            return $query->sum('qty');
+        });
+
         return view('admin.dashboard', compact(
             'stats',
             'pesananTerbaru',
             'totalStokGabungan',
             'isTotalStokRendah',
+            'chartLabels',
+            'chartData',
+            'chartTitle'
         ));
     }
 }

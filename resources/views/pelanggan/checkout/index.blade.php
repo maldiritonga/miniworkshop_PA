@@ -7,35 +7,48 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
 
-    <!-- Header Shopee Style -->
-    <nav class="bg-white py-4 px-6 md:px-12 sticky top-0 z-50 border-b border-gray-200">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('home') }}" class="flex items-center gap-2">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto object-contain">
-                    <h1 class="text-xl font-black text-gray-900 tracking-tight">Mini Workshop</h1>
-                </a>
-                <div class="h-6 w-[2px] bg-gray-200 mx-2 hidden md:block"></div>
-                <h2 class="text-lg font-bold text-gray-700 hidden md:block">Checkout</h2>
+    <!-- Navigation -->
+    <nav class="bg-white py-5 px-6 md:px-12 sticky top-0 z-50 shadow-sm" x-data="{ helpOpen: false }">
+        <div class="w-full flex justify-between items-center">
+            <a href="{{ route('home') }}" class="flex items-center gap-2">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto object-contain">
+                <h1 class="text-lg font-black uppercase tracking-tighter text-gray-900">MINI WORKSHOP</h1>
+            </a>
+            <div class="flex items-center gap-4 md:gap-10 text-[13px] font-bold text-gray-800">
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Dasboard</a>
+                <a href="{{ route('home') }}#catalog" class="hover:text-yellow-600 transition">katalog</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">About</a>
+                <a href="{{ route('pesanan.saya') }}" class="{{ request()->routeIs('pesanan.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Pesanan</a>
+                <a href="{{ route('retur.saya') }}" class="{{ request()->routeIs('retur.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Retur</a>                                
             </div>
-            @auth
-            <div class="text-sm font-medium text-gray-600 flex items-center gap-2">
-                @if(Auth::user()->foto_profil)
-                    <img src="{{ asset('images/profil/' . Auth::user()->foto_profil) }}" class="w-6 h-6 rounded-full object-cover">
-                @else
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=random" class="w-6 h-6 rounded-full">
-                @endif
-                {{ Auth::user()->nama }}
+            <div class="flex items-center gap-3 md:gap-6">
+                @include('layouts.help-modal')
+                @auth
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open">
+                        @if(Auth::user()->foto_profil)
+                            <img src="{{ asset('images/profil/' . Auth::user()->foto_profil) }}" class="w-9 h-9 rounded-full border border-gray-200 object-cover">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nama) }}&background=random" class="w-9 h-9 rounded-full border border-gray-200">
+                        @endif
+                    </button>
+                    <div x-show="open" x-cloak @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 z-50 border border-gray-100">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50">Logout</button>
+                        </form>
+                    </div>
+                </div>
+                @endauth
             </div>
-            @endauth
         </div>
     </nav>
 
@@ -242,6 +255,13 @@
             }
         }
     }">
+        <a href="{{ route('keranjang.index') }}" class="inline-flex items-center gap-2 text-sm font-bold text-gray-900 hover:text-yellow-600 transition mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Kembali ke Keranjang
+        </a>
+
         <x-flash-message />
 
         @if ($errors->any())

@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 0.95rem;
+    }
+}
+
+@layer components {
+    [class*="text-[9px]"] {
+        font-size: 11px !important;
+        line-height: 1.35 !important;
+    }
+
+    [class*="text-[10px]"] {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+
+    [class*="text-[11px]"] {
+        font-size: 13px !important;
+        line-height: 1.4 !important;
+    }
+
+    [class*="text-[12px]"] {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+
+    [class*="text-[13px]"] {
+        font-size: 15px !important;
+        line-height: 1.5 !important;
+    }
+
+    .text-xs {
+        font-size: 0.8125rem !important;
+        line-height: 1.4rem !important;
+    }
+
+    .text-sm {
+        font-size: 0.9375rem !important;
+        line-height: 1.5rem !important;
+    }
+}

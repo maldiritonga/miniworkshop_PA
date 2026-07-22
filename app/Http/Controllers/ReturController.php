@@ -12,6 +12,44 @@ use Illuminate\Support\Str;
 class ReturController extends Controller
 {
     /**
+     * Tampilkan daftar retur milik pelanggan
+     */
+    public function index()
+    {
+        $user = Auth::user();
+        
+        $returs = Retur::whereHas('pesanan', function($q) use ($user) {
+            $q->where('id_user', $user->id_user);
+        })->with(['pesanan', 'produk'])->orderBy('created_at', 'desc')->get();
+
+        $pesanans = Pesanan::where('id_user', $user->id_user)
+            ->whereIn('status_pesanan', ['selesai', 'diretur'])
+            ->with(['detail.produk', 'retur'])
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        $cartCount = \App\Models\Keranjang::where('id_user', $user->id_user)->count();
+
+        return view('pelanggan.retur.index', compact('returs', 'pesanans', 'cartCount'));
+    }
+
+    /**
+     * Tampilkan detail retur produk
+     */
+    public function show($id_retur)
+    {
+        $user = Auth::user();
+
+        $retur = Retur::whereHas('pesanan', function($q) use ($user) {
+            $q->where('id_user', $user->id_user);
+        })->with(['pesanan', 'produk'])->findOrFail($id_retur);
+
+        $cartCount = \App\Models\Keranjang::where('id_user', $user->id_user)->count();
+
+        return view('pelanggan.retur.show', compact('retur', 'cartCount'));
+    }
+
+    /**
      * Pelanggan ajukan retur baru
      */
     public function store(Request $request, $id_pesanan)
@@ -24,7 +62,7 @@ class ReturController extends Controller
 
         if ($pesanan->updated_at->copy()->addDays(7)->isPast()) {
             \flash('Pesanan sudah melewati batas waktu pengembalian (1 minggu) sehingga tidak bisa diretur lagi.')->error();
-            return redirect()->route('pesanan.show', $id_pesanan);
+            return redirect()->route('retur.saya');
         }
 
         $request->validate([
@@ -57,7 +95,7 @@ class ReturController extends Controller
 
         if ($sudahRetur) {
             \flash('Produk ini sudah pernah diajukan retur.')->error();
-            return redirect()->route('pesanan.show', $id_pesanan);
+            return redirect()->route('retur.saya');
         }
 
         // Upload foto bukti (1-3 foto)
@@ -68,7 +106,7 @@ class ReturController extends Controller
             $namaFoto[] = $nama;
         }
 
-        Retur::create([
+        $returBaru = Retur::create([
             'id_pesanan'   => $id_pesanan,
             'id_produk'    => $request->id_produk,
             'alasan_retur' => $request->alasan_retur,
@@ -77,7 +115,7 @@ class ReturController extends Controller
         ]);
 
         \flash('Pengajuan retur berhasil dikirim. Admin akan segera memprosesnya.')->success();
-        return redirect()->route('pesanan.show', $id_pesanan);
+        return redirect()->route('retur.show', $returBaru->id_retur);
     }
 
     /**
@@ -93,7 +131,7 @@ class ReturController extends Controller
 
         if ($retur->status_retur !== Retur::STATUS_MENUNGGU_REKENING) {
             \flash('Status retur tidak valid untuk aksi ini.')->error();
-            return redirect()->route('pesanan.show', $id_pesanan);
+            return redirect()->route('retur.show', $id_retur);
         }
 
         $request->validate([
@@ -114,7 +152,7 @@ class ReturController extends Controller
         ]);
 
         \flash('Data rekening berhasil disimpan. Silakan kirim barang ke toko.')->success();
-        return redirect()->route('pesanan.show', $id_pesanan);
+        return redirect()->route('retur.show', $id_retur);
     }
 
     /**
@@ -130,13 +168,13 @@ class ReturController extends Controller
 
         if ($retur->status_retur !== Retur::STATUS_UANG_DITRANSFER) {
             \flash('Status retur tidak valid untuk aksi ini.')->error();
-            return redirect()->route('pesanan.show', $id_pesanan);
+            return redirect()->route('retur.show', $id_retur);
         }
 
         $retur->update(['status_retur' => Retur::STATUS_SELESAI]);
         $retur->pesanan->update(['status_pesanan' => 'selesai']);
 
         \flash('Retur selesai. Terima kasih telah mengkonfirmasi penerimaan dana.')->success();
-        return redirect()->route('pesanan.show', $id_pesanan);
+        return redirect()->route('retur.show', $id_retur);
     }
 }

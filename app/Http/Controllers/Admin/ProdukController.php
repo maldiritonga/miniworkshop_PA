@@ -157,4 +157,30 @@ class ProdukController extends Controller
 
         return redirect()->back()->with('success', 'Diskon berhasil diperbarui.');
     }
+
+    public function barangMasuk()
+    {
+        // Barang masuk = produk yang diinput admin
+        $produk = Produk::with('kategori')->latest()->paginate(15);
+        return view('admin.produk.barang-masuk', compact('produk'));
+    }
+
+    public function barangKeluar()
+    {
+        // Barang keluar = detail pesanan dari pesanan dengan status 'selesai'
+        $barangKeluar = \App\Models\DetailPesanan::with(['produk', 'pesanan.user'])
+            ->whereHas('pesanan', function($q) {
+                $q->where('status_pesanan', 'selesai');
+            })
+            ->latest()
+            ->paginate(15);
+        
+        return view('admin.produk.barang-keluar', compact('barangKeluar'));
+    }
+    public function duplicate($id)
+    {
+        $duplicateProduk = Produk::findOrFail($id);
+        $kategori = Kategori::all();
+        return view('admin.produk.create', compact('kategori', 'duplicateProduk'));
+    }
 }

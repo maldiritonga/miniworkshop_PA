@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice #INV-{{ str_pad($pesanan->id_pesanan, 5, '0', STR_PAD_LEFT) }} - Mini Workshop</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #111; font-size: 13px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f5f5f5; color: #111; font-size: 13px; }
 
         .screen-bar {
             background: white;

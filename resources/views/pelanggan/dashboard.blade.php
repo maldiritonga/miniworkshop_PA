@@ -7,9 +7,9 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fafafa; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fafafa; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
@@ -28,10 +28,11 @@
 
             <!-- Middle: Menus (Visible on all screens above small) -->
             <div class="flex items-center gap-4 md:gap-10 text-[13px] font-bold text-gray-800">
-                <a href="{{ route('home') }}" class="hover:text-yellow-600 transition">Dasboard</a>
-                <a href="#catalog" class="hover:text-yellow-600 transition">katalog</a>
-                <a href="{{ route('about') }}" class="hover:text-yellow-600 transition">About</a>
-                <a href="{{ route('pesanan.saya') }}" class="hover:text-yellow-600 transition">pesanan</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Dasboard</a>
+                <a href="{{ route('home') }}#catalog" class="hover:text-yellow-600 transition">katalog</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">About</a>
+                <a href="{{ route('pesanan.saya') }}" class="{{ request()->routeIs('pesanan.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Pesanan</a>
+                <a href="{{ route('retur.saya') }}" class="{{ request()->routeIs('retur.*') ? 'text-yellow-600' : 'hover:text-yellow-600' }} transition">Retur</a>                                
             </div>
 
             <!-- Right: Actions -->
@@ -92,6 +93,72 @@
                 </div>
             </div>
         </div>
+
+        @if($barangDiskon->count() > 0)
+        <!-- Section: Barang Diskon -->
+        <div class="px-6 md:px-12 mb-16">
+            <h3 class="text-xl font-bold text-gray-900 mb-8 ml-2 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                </svg>
+                Spesial Diskon
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                @foreach($barangDiskon as $item)
+                <div class="group cursor-pointer">
+                    <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
+                        @if($item->gambar_url)
+                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
+                                <img src="{{ $item->gambar_url }}" alt="{{ $item->nama_produk }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
+                            </a>
+                        @else
+                            <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
+                                <img src="https://images.unsplash.com/photo-1515347619252-73da985fa6d5?auto=format&fit=crop&w=400&q=80" alt="Default Product" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 {{ $item->stok <= 0 ? 'opacity-50' : '' }}">
+                            </a>
+                        @endif
+                        @if($item->stok <= 0)
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="bg-black/60 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full">Stok Habis</span>
+                        </div>
+                        @elseif($item->isDiskonAktif())
+                        <div class="absolute top-3 right-3 bg-red-500/95 backdrop-blur-sm text-white px-2.5 py-1 rounded-xl shadow-lg text-right z-10 border border-red-400">
+                            <div class="text-[10px] font-black tracking-widest uppercase">Diskon {{ $item->diskon_persen }}%</div>
+                            @if($item->diskon_selesai)
+                                <div class="text-[8px] font-semibold opacity-90 mt-0.5">s.d. {{ \Carbon\Carbon::parse($item->diskon_selesai)->translatedFormat('d M Y') }}</div>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                    <div class="px-2">
+                        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">{{ $item->kategori->nama_kategori }}</div>
+                        @if($item->stok > 0)
+                        <a href="{{ route('produk.show', $item->slug) }}" class="font-bold text-gray-900 text-sm mb-1 truncate block hover:text-yellow-600 transition">
+                            {{ $item->nama_produk }}
+                        </a>
+                        @else
+                        <span class="font-bold text-gray-400 text-sm mb-1 truncate block">{{ $item->nama_produk }}</span>
+                        @endif
+                        <div class="flex justify-between items-center">
+                            <div class="text-[11px] font-bold {{ $item->stok > 0 ? 'text-yellow-600/80' : 'text-gray-400' }}">
+                                @if($item->isDiskonAktif())
+                                    <span class="line-through text-xs font-normal text-gray-400 mr-1">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                                    <span class="text-red-500 font-black">Rp {{ number_format($item->harga_akhir, 0, ',', '.') }}</span>
+                                @else
+                                    Rp {{ number_format($item->harga, 0, ',', '.') }}
+                                @endif
+                            </div>
+                            @if($item->stok > 0)
+                                <span class="text-[9px] px-1.5 py-0.5 bg-green-50 text-green-600 font-bold rounded uppercase tracking-tighter">Tersedia</span>
+                            @else
+                                <span class="text-[9px] px-1.5 py-0.5 bg-red-50 text-red-600 font-bold rounded uppercase tracking-tighter">Habis</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
 
         <!-- Section: Barang Baru Masuk -->
         <div class="px-6 md:px-12 mb-16">

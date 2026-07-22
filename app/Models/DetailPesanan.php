@@ -27,4 +27,9 @@ class DetailPesanan extends Model
     {
         return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
+
+    public function getSubtotalAttribute()
+    {
+        return $this->harga * $this->qty;
+    }
 }

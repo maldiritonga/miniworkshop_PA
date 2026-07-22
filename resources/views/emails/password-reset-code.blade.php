@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kode Reset Password</title>
 </head>
-<body style="margin:0;padding:0;background:#f9fafb;font-family:Arial,Helvetica,sans-serif;">
+<body style="margin:0;padding:0;background:#f9fafb;font-family:'Plus Jakarta Sans',sans-serif;">
     <div style="max-width:560px;margin:0 auto;padding:28px 16px;">
         <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;padding:24px;">
             <h1 style="margin:0 0 8px 0;font-size:20px;line-height:28px;color:#111827;">Kode Reset Password</h1>

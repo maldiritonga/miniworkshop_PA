@@ -13,47 +13,58 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->toDateString());
-        $endDate = $request->get('end_date', Carbon::now()->toDateString());
+        $endDate   = $request->get('end_date', Carbon::now()->toDateString());
+        $tipe      = $request->get('tipe', 'semua');
 
-        $pesanan = Pesanan::with(['user', 'pembayaran', 'detail'])
+        $query = Pesanan::with(['user', 'pembayaran', 'detail.produk'])
             ->where('status_pesanan', 'selesai')
-            ->whereDoesntHave('retur', function ($q) {
-                $q->where('status_retur', 'selesai');
-            })
-            ->whereBetween('tanggal_pesanan', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
-            ->latest()
-            ->get();
+            ->whereDoesntHave('retur', fn($q) => $q->where('status_retur', 'selesai'))
+            ->whereBetween('tanggal_pesanan', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+
+        if ($tipe !== 'semua') {
+            $query->where('tipe_pesanan', $tipe);
+        }
+
+        $pesanan = $query->latest()->get();
 
         $totalPendapatan = $pesanan->sum('total_harga');
-        $totalOnline = $pesanan->where('tipe_pesanan', 'online')->sum('total_harga');
-        $totalOffline = $pesanan->where('tipe_pesanan', 'offline')->sum('total_harga');
+        $totalOnline     = $pesanan->where('tipe_pesanan', 'online')->sum('total_harga');
+        $totalOffline    = $pesanan->where('tipe_pesanan', 'offline')->sum('total_harga');
 
-        $ringkasanHarian = DB::table('pesanan')
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                      ->from('retur')
-                      ->whereColumn('retur.id_pesanan', 'pesanan.id_pesanan')
-                      ->where('retur.status_retur', 'selesai');
-            })
-            ->select(
-                DB::raw('DATE(pesanan.tanggal_pesanan) as date'),
-                DB::raw('SUM(pesanan.total_harga) as total'),
-                DB::raw('COUNT(DISTINCT pesanan.id_pesanan) as count')
-            )
+        // Harian
+        $hQuery = DB::table('pesanan')
+            ->whereNotExists(fn($q) => $q->select(DB::raw(1))->from('retur')
+                ->whereColumn('retur.id_pesanan', 'pesanan.id_pesanan')
+                ->where('retur.status_retur', 'selesai'))
             ->where('pesanan.status_pesanan', 'selesai')
-            ->whereBetween('pesanan.tanggal_pesanan', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->whereBetween('pesanan.tanggal_pesanan', [$startDate . ' 00:00:00', $endDate . ' 23:59:59']);
+        if ($tipe !== 'semua') $hQuery->where('tipe_pesanan', $tipe);
+
+        $ringkasanHarian = $hQuery
+            ->select(
+                DB::raw('DATE(tanggal_pesanan) as date'),
+                DB::raw('SUM(total_harga) as total'),
+                DB::raw('COUNT(DISTINCT id_pesanan) as count')
+            )
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->get();
 
+        // Mingguan
+        $ringkasanMingguan = $pesanan->groupBy(function ($item) {
+            $d = Carbon::parse($item->tanggal_pesanan);
+            return 'Minggu ke-' . $d->weekOfMonth . ', ' . $d->translatedFormat('F Y');
+        })->map(fn($g) => ['total' => $g->sum('total_harga'), 'count' => $g->count()]);
+
+        // Bulanan
+        $ringkasanBulanan = $pesanan->groupBy(function ($item) {
+            return Carbon::parse($item->tanggal_pesanan)->translatedFormat('F Y');
+        })->map(fn($g) => ['total' => $g->sum('total_harga'), 'count' => $g->count()]);
+
         return view('admin.laporan.index', compact(
-            'pesanan', 
-            'startDate', 
-            'endDate', 
-            'totalPendapatan', 
-            'totalOnline', 
-            'totalOffline',
-            'ringkasanHarian'
+            'pesanan', 'startDate', 'endDate', 'tipe',
+            'totalPendapatan', 'totalOnline', 'totalOffline',
+            'ringkasanHarian', 'ringkasanMingguan', 'ringkasanBulanan'
         ));
     }
 }

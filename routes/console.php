@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('pesanan:batalkan-kadaluarsa')->everyMinute();
-Schedule::command('pesanan:selesaikan-otomatis')->everyHour();
+Schedule::command('pesanan:selesaikan-otomatis')->hourly();

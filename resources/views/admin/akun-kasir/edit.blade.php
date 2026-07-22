@@ -1,18 +1,18 @@
 <x-admin-layout>
-    <x-slot name="title">Edit Akun Kasir</x-slot>
+    <x-slot name="title">Edit Akun Staff</x-slot>
 
     <div class="max-w-4xl mx-auto space-y-6">
         <!-- Breadcrumbs -->
         <nav class="flex text-sm text-gray-500 gap-2">
             <a href="{{ route('admin.dashboard') }}" class="hover:text-gray-900">Dashboard</a>
             <span>/</span>
-            <a href="{{ route('admin.akun-kasir.index') }}" class="hover:text-gray-900">Akun Kasir</a>
+            <a href="{{ route('admin.akun-kasir.index') }}" class="hover:text-gray-900">Akun Staff</a>
             <span>/</span>
             <span class="text-gray-900 font-bold">Edit</span>
         </nav>
 
         <div class="bg-white rounded-[32px] p-8 md:p-12 shadow-sm border border-gray-100">
-            <h1 class="text-3xl font-bold text-gray-900 mb-8">Edit Akun Kasir</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-8">Edit Akun Staff</h1>
 
             <form action="{{ route('admin.akun-kasir.update', $kasir->id_user) }}" method="POST" class="space-y-8">
                 @csrf
@@ -47,7 +47,16 @@
                                placeholder="08123456789">
                         <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
                     </div>
-                    <div></div>
+
+                    <!-- Tipe Akun -->
+                    <div>
+                        <label for="role" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Tipe Akun</label>
+                        <select name="role" id="role" required class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-yellow-400 transition-all outline-none text-gray-900">
+                            <option value="kasir" {{ old('role', $kasir->role) === 'kasir' ? 'selected' : '' }}>Kasir</option>
+                            <option value="admin" {{ old('role', $kasir->role) === 'admin' ? 'selected' : '' }}>Super Admin</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                    </div>
                 </div>
 
                 <div class="bg-yellow-50 p-6 rounded-2xl space-y-4">

@@ -31,10 +31,22 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', function (Illuminate\Http\Request $request) {
-    $now = \Carbon\Carbon::now();
     $barangBaru = \App\Models\Produk::with('kategori')
         ->where('status_produk', 'aktif')
-        ->where('created_at', '>=', $now->subDays(7))
+        ->where('created_at', '>=', now()->subDays(7))
+        ->latest()
+        ->get();
+
+    $barangDiskon = \App\Models\Produk::with('kategori')
+        ->where('status_produk', 'aktif')
+        ->where('diskon_persen', '>', 0)
+        ->where(function($q) {
+            $q->where(function($q2) {
+                $q2->whereNull('diskon_mulai')->orWhere('diskon_mulai', '<=', now());
+            })->where(function($q2) {
+                $q2->whereNull('diskon_selesai')->orWhere('diskon_selesai', '>=', now());
+            });
+        })
         ->latest()
         ->get();
 
@@ -50,7 +62,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
 
     $kategoriList = \App\Models\Kategori::all();
 
-    return view('pelanggan.dashboard', compact('barangBaru', 'katalogProduk', 'kategoriList'));
+    return view('pelanggan.dashboard', compact('barangBaru', 'barangDiskon', 'katalogProduk', 'kategoriList'));
 })->name('home');
 
 Route::get('/about', function () {
@@ -59,6 +71,8 @@ Route::get('/about', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/pesanan-saya', [App\Http\Controllers\OrderController::class, 'index'])->name('pesanan.saya');
+    Route::get('/retur-saya', [App\Http\Controllers\ReturController::class, 'index'])->name('retur.saya');
+    Route::get('/retur-saya/{id_retur}', [App\Http\Controllers\ReturController::class, 'show'])->name('retur.show');
     Route::get('/pesanan-saya/{id}', [App\Http\Controllers\OrderController::class, 'show'])->name('pesanan.show');
     Route::get('/pesanan-saya/{id}/invoice', [App\Http\Controllers\OrderController::class, 'invoice'])->name('pesanan.invoice');
     Route::get('/pesanan-saya/{id}/label-retur/{id_retur}', [App\Http\Controllers\OrderController::class, 'labelRetur'])->name('pesanan.label-retur');
@@ -71,10 +85,22 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/dashboard', function (Illuminate\Http\Request $request) {
-    $now = \Carbon\Carbon::now();
     $barangBaru = \App\Models\Produk::with('kategori')
         ->where('status_produk', 'aktif')
-        ->where('created_at', '>=', $now->subDays(7))
+        ->where('created_at', '>=', now()->subDays(7))
+        ->latest()
+        ->get();
+
+    $barangDiskon = \App\Models\Produk::with('kategori')
+        ->where('status_produk', 'aktif')
+        ->where('diskon_persen', '>', 0)
+        ->where(function($q) {
+            $q->where(function($q2) {
+                $q2->whereNull('diskon_mulai')->orWhere('diskon_mulai', '<=', now());
+            })->where(function($q2) {
+                $q2->whereNull('diskon_selesai')->orWhere('diskon_selesai', '>=', now());
+            });
+        })
         ->latest()
         ->get();
 
@@ -90,7 +116,7 @@ Route::get('/dashboard', function (Illuminate\Http\Request $request) {
 
     $kategoriList = \App\Models\Kategori::all();
 
-    return view('pelanggan.dashboard', compact('barangBaru', 'katalogProduk', 'kategoriList'));
+    return view('pelanggan.dashboard', compact('barangBaru', 'barangDiskon', 'katalogProduk', 'kategoriList'));
 })->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -121,7 +147,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('produk/barang-masuk', [\App\Http\Controllers\Admin\ProdukController::class, 'barangMasuk'])->name('produk.barang-masuk');
+    Route::get('produk/barang-keluar', [\App\Http\Controllers\Admin\ProdukController::class, 'barangKeluar'])->name('produk.barang-keluar');
     Route::resource('produk', \App\Http\Controllers\Admin\ProdukController::class);
+    Route::get('produk/{id}/duplicate', [\App\Http\Controllers\Admin\ProdukController::class, 'duplicate'])->name('produk.duplicate');
     Route::post('/produk/{id}/quick-discount', [\App\Http\Controllers\Admin\ProdukController::class, 'updateDiscount'])->name('produk.update-discount');
     Route::get('/offline-transaction', [\App\Http\Controllers\Admin\OfflineTransactionController::class, 'index'])->name('offline-transaction.index');
     Route::post('/offline-transaction', [\App\Http\Controllers\Admin\OfflineTransactionController::class, 'store'])->name('offline-transaction.store');

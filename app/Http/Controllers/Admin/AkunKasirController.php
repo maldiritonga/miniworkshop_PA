@@ -12,7 +12,7 @@ class AkunKasirController extends Controller
 {
     public function index()
     {
-        $kasir = User::where('role', 'kasir')->latest()->paginate(10);
+        $kasir = User::whereIn('role', ['kasir', 'admin'])->where('id_user', '!=', auth()->id())->latest()->paginate(10);
         return view('admin.akun-kasir.index', compact('kasir'));
     }
 
@@ -27,6 +27,7 @@ class AkunKasirController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'no_hp' => ['required', 'string', 'max:20'],
+            'role' => ['required', 'in:kasir,admin'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -35,32 +36,34 @@ class AkunKasirController extends Controller
             'email' => $request->email,
             'no_hp' => $request->no_hp,
             'password' => Hash::make($request->password),
-            'role' => 'kasir',
+            'role' => $request->role,
         ]);
 
-        return redirect()->route('admin.akun-kasir.index')->with('success', 'Akun kasir berhasil ditambahkan.');
+        return redirect()->route('admin.akun-kasir.index')->with('success', 'Akun staff berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
-        $kasir = User::where('role', 'kasir')->findOrFail($id);
+        $kasir = User::whereIn('role', ['kasir', 'admin'])->findOrFail($id);
         return view('admin.akun-kasir.edit', compact('kasir'));
     }
 
     public function update(Request $request, $id)
     {
-        $kasir = User::where('role', 'kasir')->findOrFail($id);
+        $kasir = User::whereIn('role', ['kasir', 'admin'])->findOrFail($id);
 
         $request->validate([
             'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$id.',id_user'],
             'no_hp' => ['required', 'string', 'max:20'],
+            'role' => ['required', 'in:kasir,admin'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $kasir->nama = $request->nama;
         $kasir->email = $request->email;
         $kasir->no_hp = $request->no_hp;
+        $kasir->role = $request->role;
 
         if ($request->filled('password')) {
             $kasir->password = Hash::make($request->password);
@@ -68,14 +71,14 @@ class AkunKasirController extends Controller
 
         $kasir->save();
 
-        return redirect()->route('admin.akun-kasir.index')->with('success', 'Akun kasir berhasil diperbarui.');
+        return redirect()->route('admin.akun-kasir.index')->with('success', 'Akun staff berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        $kasir = User::where('role', 'kasir')->findOrFail($id);
+        $kasir = User::whereIn('role', ['kasir', 'admin'])->findOrFail($id);
         $kasir->delete();
 
-        return redirect()->route('admin.akun-kasir.index')->with('success', 'Akun kasir berhasil dihapus.');
+        return redirect()->route('admin.akun-kasir.index')->with('success', 'Akun staff berhasil dihapus.');
     }
 }
