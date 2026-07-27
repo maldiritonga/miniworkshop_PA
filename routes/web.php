@@ -208,15 +208,25 @@ Route::get('/deploy/{action}/{token}', function ($action, $token) {
                 Illuminate\Support\Facades\Artisan::call('optimize:clear');
                 return 'Cache cleared:<br><pre>' . Illuminate\Support\Facades\Artisan::output() . '</pre>';
             case 'storage-link':
-                if (file_exists(public_path('storage'))) {
-                    if (is_link(public_path('storage'))) {
-                        unlink(public_path('storage'));
+                $target = storage_path('app/public');
+                $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? public_path();
+                $link = rtrim($docRoot, '/') . '/storage';
+
+                if (file_exists($link)) {
+                    if (is_link($link)) {
+                        unlink($link);
                     } else {
-                        exec('rm -rf ' . escapeshellarg(public_path('storage')));
+                        exec('rm -rf ' . escapeshellarg($link));
                     }
                 }
-                Illuminate\Support\Facades\Artisan::call('storage:link');
-                return 'Storage link completed:<br><pre>' . Illuminate\Support\Facades\Artisan::output() . '</pre>';
+
+                if (@symlink($target, $link)) {
+                    return "Storage link created successfully!<br>Linked: $link -> $target";
+                } else {
+                    // Fallback to artisan if symlink() is disabled
+                    Illuminate\Support\Facades\Artisan::call('storage:link');
+                    return "Fallback to Artisan storage:link.<br><pre>" . Illuminate\Support\Facades\Artisan::output() . "</pre>";
+                }
             default:
                 return 'Action not found. Available actions: migrate, optimize, clear, storage-link';
         }
