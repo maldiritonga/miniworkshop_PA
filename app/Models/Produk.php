@@ -133,14 +133,8 @@ class Produk extends Model
             return $this->gambar;
         }
 
-        if (Storage::disk('public')->exists('produk/' . $this->gambar)) {
-            return asset('storage/produk/' . $this->gambar);
-        }
-
-        if (file_exists(public_path('images/products/' . $this->gambar))) {
-            return asset('images/products/' . $this->gambar);
-        }
-
-        return null;
+        // Gunakan route khusus untuk membaca gambar secara langsung menggunakan PHP.
+        // Ini memastikan gambar selalu terbaca meskipun symlink storage bermasalah di Plesk/Shared Hosting.
+        return route('produk.image', ['filename' => $this->gambar]);
     }
 }
