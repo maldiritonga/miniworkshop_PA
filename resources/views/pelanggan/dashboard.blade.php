@@ -167,7 +167,7 @@
             <h3 class="text-xl font-bold text-gray-900 mb-8 ml-2">Barang Baru Masuk</h3>
             <div class="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory scrollbar-hide">
                 @forelse($barangBaru as $item)
-                <div class="group cursor-pointer min-w-[160px] md:min-w-[200px] lg:min-w-[240px] flex-shrink-0 snap-start">
+                <div class="group cursor-pointer w-[45%] md:w-[30%] lg:w-[15%] flex-shrink-0 snap-start">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
                         @if($item->gambar_url)
                             <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">
