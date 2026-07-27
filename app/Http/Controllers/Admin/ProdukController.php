@@ -161,7 +161,7 @@ class ProdukController extends Controller
     public function barangMasuk()
     {
         // Barang masuk = produk yang diinput admin
-        $produk = Produk::with('kategori')->latest()->paginate(15);
+        $produk = Produk::with('kategori')->latest()->paginate(10);
         return view('admin.produk.barang-masuk', compact('produk'));
     }
 
@@ -173,7 +173,7 @@ class ProdukController extends Controller
                 $q->where('status_pesanan', 'selesai');
             })
             ->latest()
-            ->paginate(15);
+            ->paginate(10);
         
         return view('admin.produk.barang-keluar', compact('barangKeluar'));
     }

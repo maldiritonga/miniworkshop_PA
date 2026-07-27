@@ -34,7 +34,7 @@ Route::get('/', function (Illuminate\Http\Request $request) {
     $barangBaru = \App\Models\Produk::with('kategori')
         ->where('status_produk', 'aktif')
         ->latest()
-        ->take(20)
+        ->take(15)
         ->get();
 
     $barangDiskon = \App\Models\Produk::with('kategori')
@@ -88,7 +88,7 @@ Route::get('/dashboard', function (Illuminate\Http\Request $request) {
     $barangBaru = \App\Models\Produk::with('kategori')
         ->where('status_produk', 'aktif')
         ->latest()
-        ->take(20)
+        ->take(15)
         ->get();
 
     $barangDiskon = \App\Models\Produk::with('kategori')
@@ -150,6 +150,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('produk/barang-masuk', [\App\Http\Controllers\Admin\ProdukController::class, 'barangMasuk'])->name('produk.barang-masuk');
     Route::get('produk/barang-keluar', [\App\Http\Controllers\Admin\ProdukController::class, 'barangKeluar'])->name('produk.barang-keluar');
     Route::resource('produk', \App\Http\Controllers\Admin\ProdukController::class);
+    Route::get('/stok/masuk', [\App\Http\Controllers\Admin\StokController::class, 'masuk'])->name('stok.masuk');
+    Route::post('/stok/masuk', [\App\Http\Controllers\Admin\StokController::class, 'storeMasuk'])->name('stok.masuk.store');
+    Route::get('/stok/keluar', [\App\Http\Controllers\Admin\StokController::class, 'keluar'])->name('stok.keluar');
+    Route::post('/stok/keluar', [\App\Http\Controllers\Admin\StokController::class, 'storeKeluar'])->name('stok.keluar.store');
     Route::get('produk/{id}/duplicate', [\App\Http\Controllers\Admin\ProdukController::class, 'duplicate'])->name('produk.duplicate');
     Route::post('/produk/{id}/quick-discount', [\App\Http\Controllers\Admin\ProdukController::class, 'updateDiscount'])->name('produk.update-discount');
     Route::get('/offline-transaction', [\App\Http\Controllers\Admin\OfflineTransactionController::class, 'index'])->name('offline-transaction.index');

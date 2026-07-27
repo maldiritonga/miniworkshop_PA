@@ -24,12 +24,7 @@
 
         <x-flash-message />
 
-        <!-- Navigation Tabs -->
-        <div class="flex gap-4">
-            <a href="{{ route('admin.produk.index') }}" class="px-6 py-2.5 rounded-2xl font-black text-sm bg-yellow-400 text-gray-900 shadow-sm">Semua Produk</a>
-            <a href="{{ route('admin.produk.barang-masuk') }}" class="px-6 py-2.5 rounded-2xl font-black text-sm bg-white text-gray-500 hover:bg-gray-50 border border-gray-200 transition">Barang Masuk</a>
-            <a href="{{ route('admin.produk.barang-keluar') }}" class="px-6 py-2.5 rounded-2xl font-black text-sm bg-white text-gray-500 hover:bg-gray-50 border border-gray-200 transition">Barang Keluar</a>
-        </div>
+
 
         <!-- Search & Filter Area -->
         <div class="bg-gray-100 rounded-[28px] p-4 flex items-center">

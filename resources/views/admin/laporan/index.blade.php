@@ -1,4 +1,5 @@
 <x-admin-layout title="Laporan Keuangan">
+    <x-flash-message />
 
     <style>
         @media print {
@@ -39,6 +40,7 @@
     <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 mb-8 no-print">
         <form action="{{ route('admin.laporan.index') }}" method="GET"
             class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <input type="hidden" name="filter_applied" value="1">
             <div>
                 <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Tanggal Mulai</label>
                 <input type="date" name="start_date" value="{{ $startDate }}"

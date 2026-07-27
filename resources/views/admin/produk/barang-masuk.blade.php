@@ -1,4 +1,4 @@
-<x-admin-layout title="Barang Masuk">
+<x-admin-layout title="Produk Masuk">
     <div class="space-y-6">
         <!-- Breadcrumbs -->
         <nav class="flex text-sm text-gray-500 gap-2">
@@ -20,12 +20,7 @@
             </a>
         </div>
 
-    <!-- Navigation Tabs -->
-    <div class="flex gap-4 mb-8">
-        <a href="{{ route('admin.produk.index') }}" class="px-6 py-2.5 rounded-2xl font-black text-sm bg-white text-gray-500 hover:bg-gray-50 border border-gray-200 transition">Semua Produk</a>
-        <a href="{{ route('admin.produk.barang-masuk') }}" class="px-6 py-2.5 rounded-2xl font-black text-sm bg-yellow-400 text-gray-900 shadow-sm">Barang Masuk</a>
-        <a href="{{ route('admin.produk.barang-keluar') }}" class="px-6 py-2.5 rounded-2xl font-black text-sm bg-white text-gray-500 hover:bg-gray-50 border border-gray-200 transition">Barang Keluar</a>
-    </div>
+
 
     <x-flash-message />
 
@@ -83,7 +78,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                 </svg>
                             </div>
-                            <span class="text-sm font-bold text-gray-400">Belum ada barang masuk (produk baru).</span>
+                            <span class="text-sm font-bold text-gray-400">Belum ada produk masuk (produk baru).</span>
                         </td>
                     </tr>
                     @endforelse

@@ -12,6 +12,14 @@ class ReportController extends Controller
 {
     public function index(Request $request)
     {
+        if ($request->has('filter_applied')) {
+            return redirect()->route('admin.laporan.index', [
+                'start_date' => $request->start_date,
+                'end_date'   => $request->end_date,
+                'tipe'       => $request->tipe,
+            ])->with('success', 'Filter laporan berhasil diterapkan.');
+        }
+
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->toDateString());
         $endDate   = $request->get('end_date', Carbon::now()->toDateString());
         $tipe      = $request->get('tipe', 'semua');

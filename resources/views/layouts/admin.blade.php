@@ -40,9 +40,32 @@
                         Dashboard
                     </x-admin-nav-link>
 
-                    <x-admin-nav-link href="{{ route('admin.produk.index') }}" :active="request()->routeIs('admin.produk.*')" icon="box">
-                        Produk
-                    </x-admin-nav-link>
+                    <details class="group mb-1" {{ request()->routeIs('admin.produk.*') ? 'open' : '' }}>
+                        <summary class="flex items-center justify-between w-full rounded-xl transition cursor-pointer list-none {{ request()->routeIs('admin.produk.*') ? 'bg-gray-100' : 'hover:bg-gray-50' }}" style="list-style: none;">
+                            <a href="{{ route('admin.produk.index') }}" class="flex-1 flex items-center gap-4 px-4 py-3.5 text-[15px] font-bold {{ request()->routeIs('admin.produk.*') ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900' }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {{ request()->routeIs('admin.produk.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-900' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                                <span>Produk</span>
+                            </a>
+                            <div class="pr-4 py-3.5 text-gray-400 group-hover:text-gray-900 transition-transform duration-200 group-open:rotate-180">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </summary>
+                        
+                        <div class="pl-4 pr-2 pt-2 space-y-1">
+                            <a href="{{ route('admin.produk.barang-masuk') }}" class="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] font-bold rounded-xl transition {{ request()->routeIs('admin.produk.barang-masuk') ? 'text-blue-600 bg-blue-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50' }}">
+                                <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.produk.barang-masuk') ? 'bg-blue-600' : 'bg-gray-300' }}"></div>
+                                Produk Masuk
+                            </a>
+                            <a href="{{ route('admin.produk.barang-keluar') }}" class="flex items-center gap-3 w-full px-4 py-2.5 text-[13px] font-bold rounded-xl transition {{ request()->routeIs('admin.produk.barang-keluar') ? 'text-blue-600 bg-blue-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50' }}">
+                                <div class="w-1.5 h-1.5 rounded-full {{ request()->routeIs('admin.produk.barang-keluar') ? 'bg-blue-600' : 'bg-gray-300' }}"></div>
+                                Produk Keluar
+                            </a>
+                        </div>
+                    </details>
 
                     <x-admin-nav-link href="{{ route('admin.pesanan.index') }}" :active="request()->routeIs('admin.pesanan.*')" icon="clipboard">
                         Pesanan
