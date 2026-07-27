@@ -11,6 +11,8 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #fafafa; }
         [x-cloak] { display: none !important; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
@@ -163,9 +165,9 @@
         <!-- Section: Barang Baru Masuk -->
         <div class="px-6 md:px-12 mb-16">
             <h3 class="text-xl font-bold text-gray-900 mb-8 ml-2">Barang Baru Masuk</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div class="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory scrollbar-hide">
                 @forelse($barangBaru as $item)
-                <div class="group cursor-pointer">
+                <div class="group cursor-pointer min-w-[160px] md:min-w-[200px] lg:min-w-[240px] flex-shrink-0 snap-start">
                     <div class="w-full aspect-[4/5] rounded-[2rem] overflow-hidden bg-white mb-4 shadow-sm group-hover:shadow-md transition-all duration-300 relative">
                         @if($item->gambar_url)
                             <a href="{{ $item->stok > 0 ? route('produk.show', $item->slug) : '#' }}">

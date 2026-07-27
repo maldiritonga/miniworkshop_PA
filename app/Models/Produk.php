@@ -134,7 +134,7 @@ class Produk extends Model
         }
 
         if (Storage::disk('public')->exists('produk/' . $this->gambar)) {
-            return route('produk.image', ['filename' => $this->gambar]);
+            return asset('storage/produk/' . $this->gambar);
         }
 
         if (file_exists(public_path('images/products/' . $this->gambar))) {

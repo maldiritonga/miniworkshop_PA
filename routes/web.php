@@ -33,8 +33,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/', function (Illuminate\Http\Request $request) {
     $barangBaru = \App\Models\Produk::with('kategori')
         ->where('status_produk', 'aktif')
-        ->where('created_at', '>=', now()->subDays(7))
         ->latest()
+        ->take(20)
         ->get();
 
     $barangDiskon = \App\Models\Produk::with('kategori')
@@ -87,8 +87,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/dashboard', function (Illuminate\Http\Request $request) {
     $barangBaru = \App\Models\Produk::with('kategori')
         ->where('status_produk', 'aktif')
-        ->where('created_at', '>=', now()->subDays(7))
         ->latest()
+        ->take(20)
         ->get();
 
     $barangDiskon = \App\Models\Produk::with('kategori')

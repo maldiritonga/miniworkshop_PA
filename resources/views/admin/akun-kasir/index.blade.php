@@ -22,11 +22,7 @@
             </a>
         </div>
 
-        @if(session('success'))
-        <div class="bg-green-50 border border-green-100 text-green-600 px-6 py-4 rounded-2xl font-bold text-sm">
-            {{ session('success') }}
-        </div>
-        @endif
+        <x-flash-message />
 
         <!-- Table Container -->
         <div class="bg-white rounded-[32px] overflow-hidden shadow-sm border border-gray-100">

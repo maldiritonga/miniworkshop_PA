@@ -24,11 +24,15 @@ class AppServiceProvider extends ServiceProvider
         }
 
         view()->composer('*', function ($view) {
+            static $cartCount = null;
+
             if (auth()->check()) {
-                $count = \App\Models\KeranjangDetail::whereHas('keranjang', function($query) {
-                    $query->where('id_user', auth()->user()->id_user);
-                })->sum('qty');
-                $view->with('cartCount', $count);
+                if ($cartCount === null) {
+                    $cartCount = \App\Models\KeranjangDetail::whereHas('keranjang', function($query) {
+                        $query->where('id_user', auth()->user()->id_user);
+                    })->sum('qty');
+                }
+                $view->with('cartCount', $cartCount);
             } else {
                 $view->with('cartCount', 0);
             }
