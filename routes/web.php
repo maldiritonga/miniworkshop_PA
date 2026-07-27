@@ -208,6 +208,13 @@ Route::get('/deploy/{action}/{token}', function ($action, $token) {
                 Illuminate\Support\Facades\Artisan::call('optimize:clear');
                 return 'Cache cleared:<br><pre>' . Illuminate\Support\Facades\Artisan::output() . '</pre>';
             case 'storage-link':
+                if (file_exists(public_path('storage'))) {
+                    if (is_link(public_path('storage'))) {
+                        unlink(public_path('storage'));
+                    } else {
+                        exec('rm -rf ' . escapeshellarg(public_path('storage')));
+                    }
+                }
                 Illuminate\Support\Facades\Artisan::call('storage:link');
                 return 'Storage link completed:<br><pre>' . Illuminate\Support\Facades\Artisan::output() . '</pre>';
             default:
