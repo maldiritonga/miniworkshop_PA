@@ -80,7 +80,7 @@
                         <span class="text-[16px] font-black uppercase tracking-wide">Aktif di Katalog</span>
                     </div>
                     <div class="text-[16px] font-black ml-4">
-                        Total Stok: <span class="text-[28px] font-black">{{ $stats['produk_total_stok'] }}</span> pcs
+                        Produk Tersedia: <span class="text-[28px] font-black">{{ $stats['produk_total_stok'] }}</span> pcs
                     </div>
                 </div>
             </div>

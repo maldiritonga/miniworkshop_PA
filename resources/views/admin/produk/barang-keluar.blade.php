@@ -32,7 +32,7 @@
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">ID Pesanan</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Produk</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Pembeli</th>
-                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Qty</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Jumlah</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Subtotal</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Tanggal Keluar</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Aksi</th>
@@ -69,7 +69,7 @@
                             <span class="text-[14px] text-gray-600 font-medium">{{ $item->pesanan->user->nama ?? 'Guest' }}</span>
                         </td>
                         <td class="px-8 py-5">
-                            <span class="text-[15px] font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full">-{{ $item->qty }}</span>
+                            <span class="text-[15px] font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full">{{ $item->qty }} Pcs</span>
                         </td>
                         <td class="px-8 py-5">
                             <span class="text-[15px] font-bold text-gray-900">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span>

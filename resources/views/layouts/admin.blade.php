@@ -42,7 +42,7 @@
 
                     <details class="group mb-1" {{ request()->routeIs('admin.produk.*') ? 'open' : '' }}>
                         <summary class="flex items-center justify-between w-full rounded-xl transition cursor-pointer list-none {{ request()->routeIs('admin.produk.*') ? 'bg-gray-100' : 'hover:bg-gray-50' }}" style="list-style: none;">
-                            <a href="{{ route('admin.produk.index') }}" class="flex-1 flex items-center gap-4 px-4 py-3.5 text-[15px] font-bold {{ request()->routeIs('admin.produk.*') ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900' }}">
+                            <a href="{{ route('admin.produk.index') }}" class="flex-1 flex items-center gap-4 px-4 py-3.5 text-lg font-black {{ request()->routeIs('admin.produk.*') ? 'text-blue-600' : 'text-gray-500 hover:text-gray-900' }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {{ request()->routeIs('admin.produk.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-900' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>

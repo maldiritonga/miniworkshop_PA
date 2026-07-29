@@ -54,7 +54,7 @@
                             <td class="px-8 py-6 text-sm text-gray-600 font-medium">{{ $item->email }}</td>
                             <td class="px-8 py-6 text-sm text-gray-600 font-medium">{{ $item->no_hp }}</td>
                             <td class="px-8 py-6">
-                                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-gray-100 text-gray-700">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest {{ $item->role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700' }}">
                                     {{ $item->role === 'admin' ? 'Super Admin' : 'Kasir' }}
                                 </span>
                             </td>

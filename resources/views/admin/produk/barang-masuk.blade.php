@@ -35,6 +35,7 @@
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Harga</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Stok Awal</th>
                         <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Tanggal Masuk</th>
+                        <th class="px-8 py-5 text-[12px] font-black text-gray-400 uppercase tracking-widest">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -69,10 +70,18 @@
                         <td class="px-8 py-5">
                             <span class="text-[14px] text-gray-600 font-medium">{{ $item->created_at->format('d M Y H:i') }}</span>
                         </td>
+                        <td class="px-8 py-5">
+                            <a href="{{ route('admin.produk.duplicate', $item->id_produk) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-100 text-yellow-700 text-xs font-black rounded-xl hover:bg-yellow-400 hover:text-white transition uppercase tracking-widest">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                </svg>
+                                Restock / Edit
+                            </a>
+                        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="px-8 py-20 text-center">
+                        <td colspan="7" class="px-8 py-20 text-center">
                             <div class="text-gray-300 mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
